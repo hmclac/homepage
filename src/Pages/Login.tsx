@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { AppContext } from '../Contexts/AppContext';
-import { API_URL } from '..';
+// import { API_URL } from '..';
 
 const StyledForm = styled(Form)`
   max-width: 500px;
@@ -50,23 +50,23 @@ export const Login = () => {
   const handleLogin = async (e: Event | any) => {
     e.preventDefault();
 
-    const res: {
-      username?: string;
-      profilePic?: string;
-      error?: string;
-      message?: string;
-    } = await fetch(`${(API_URL as string) + '/user/login'}`, {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-    }).then((x) => x.json());
-    if (res.error) {
-      // display error somewhere
-    }
-    if (res.message === 'Successfully logged in') {
-      setState({ ...state, username: res.username, isLoggedIn: true });
-    }
+    // const res: {
+    //   username?: string;
+    //   profilePic?: string;
+    //   error?: string;
+    //   message?: string;
+    // } = await fetch(`${(API_URL as string) + '/user/login'}`, {
+    //   method: 'POST',
+    //   body: JSON.stringify({ username, password }),
+    //   headers: { 'Content-Type': 'application/json' },
+    //   credentials: 'include',
+    // }).then((x) => x.json());
+    // if (res.error) {
+    //   // display error somewhere
+    // }
+    // if (res.message === 'Successfully logged in') {
+    //   setState({ ...state, username: res.username, isLoggedIn: true });
+    // }
   };
 
   return (

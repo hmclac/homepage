@@ -12,7 +12,7 @@ import { NotFound } from './Pages/404';
 import { Employee } from './Pages/Employee';
 
 // process.env.URL = 'http://localhost:3000';
-export const API_URL = 'https://stryfe-backend.mooo.com';
+// export const API_URL = 'https://hmc-lac.mooo.com';
 
 const router = createBrowserRouter([
   {

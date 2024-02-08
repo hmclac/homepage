@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { API_URL } from '..';
+// import { API_URL } from '..';
 
 // Context with the correct type
 export const AppContext = createContext<AppContextType | null>(null);
