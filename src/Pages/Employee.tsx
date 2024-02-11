@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap';
 
 import { useNavigate } from 'react-router-dom';
@@ -30,22 +30,11 @@ const Employee = () => {
   const [headcount, setHeadcount] = useState<Headcount>(defaultHeadcount);
 
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!context || !context.state.isLoggedIn) return navigate('/login');
-    document.title = 'LAC | Employee';
 
-    fetchCheckouts();
-    fetchBikes();
-  }, [navigate, context]);
-
-  if (!context || !context.state.isLoggedIn) {
-    return <p>You must be logged in to access this page.</p>;
-  }
-
-  async function fetchCheckouts() {
+  const fetchCheckouts = async (username: string) => {
     const res: CheckoutData = await fetch(`${API_URL}/checkout`, {
       body: JSON.stringify({
-        staff_name: context!.state.username
+        staff_name: username
       }),
       method: 'PUT',
       headers: {
@@ -75,12 +64,12 @@ const Employee = () => {
       }
     }
     setCheckouts({ ...(res as CheckoutData) });
-  }
+  };
 
-  async function fetchBikes() {
+  const fetchBikes = async (username: string) => {
     const res = await fetch(`${API_URL}/bikes`, {
       body: JSON.stringify({
-        staff_name: context!.state.username
+        staff_name: username
       }),
       method: 'PUT',
 
@@ -94,6 +83,18 @@ const Employee = () => {
     }
 
     setBikes(res);
+  };
+  useEffect(() => {
+    if (!context || !context.state.isLoggedIn || !context.state.username)
+      return navigate('/login');
+    document.title = 'LAC | Employee';
+
+    fetchCheckouts(context.state.username);
+    fetchBikes(context.state.username);
+  }, [navigate, context]);
+
+  if (!context || !context.state.isLoggedIn) {
+    return <p>You must be logged in to access this page.</p>;
   }
 
   const handleSwipe = async (e: any) => {
