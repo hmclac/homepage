@@ -48,7 +48,17 @@ export const H2 = styled.h2`
 `;
 
 const Home = () => {
-  const [occupancy, setOccupancy] = useState<Occupancy>();
+  const [occupancy, setOccupancy] = useState<Occupancy>({
+    headcount_last_updated: '',
+    weightRoom: { count: 0, data: [] },
+    gym: { count: 0, data: [] },
+    aerobics: { count: 0, data: [] },
+    lobby: { count: 0, data: [] },
+    checkout: {},
+    bikes: {},
+    bikeUpdate: '',
+    checkoutUpdate: ''
+  });
   const [data, setData] = useState<DataState>(defaultState);
 
   useEffect(() => {
