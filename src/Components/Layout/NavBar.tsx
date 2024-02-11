@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 
 import { AppContext } from '../../Contexts/AppContext';
 
@@ -19,7 +19,10 @@ const NavBar = () => {
     return null;
   }
 
-  const { state, setState } = context;
+  const {
+    state
+    // setState
+  } = context;
 
   return (
     <Navbar expand='md' style={{ backgroundColor: navbarLight }}>

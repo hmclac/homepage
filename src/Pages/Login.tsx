@@ -28,14 +28,14 @@ export const Login = () => {
     if (context && context.state.isLoggedIn) {
       navigate('/employee');
     }
-  }, [context?.state.isLoggedIn, navigate]);
+  }, [context, context?.state.isLoggedIn, navigate]);
 
-  useEffect(() => {
-    // Update local storage when isLoggedIn changes
-    // if (context && context.state.isLoggedIn) {
-    //   localStorage.setItem('state', JSON.stringify(context.state));
-    // }
-  }, [context?.state.isLoggedIn]);
+  // useEffect(() => {
+  // Update local storage when isLoggedIn changes
+  // if (context && context.state.isLoggedIn) {
+  //   localStorage.setItem('state', JSON.stringify(context.state));
+  // }
+  // }, [context?.state.isLoggedIn]);
   if (!context) {
     return null;
   }

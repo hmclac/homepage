@@ -60,7 +60,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const [state, setState] = useState<AppState>(() => {
-    const storedState = localStorage.getItem('state');
+    // const storedState = localStorage.getItem('state');
     return defaultState;
 
     // return storedState ? JSON.parse(storedState) : defaultState;

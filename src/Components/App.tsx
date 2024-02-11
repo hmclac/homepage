@@ -1,10 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Outlet } from 'react-router';
 import styled from 'styled-components';
 
 import { AppContext } from '../Contexts/AppContext';
 import { NavBar } from './Layout/NavBar';
-
 
 export const navbarLight = '#F9F9FA';
 
@@ -28,7 +27,7 @@ const App = () => {
     return null;
   }
 
-  const { state, setState } = context;
+  // const { state, setState } = context;
 
   return (
     <StyledApp>

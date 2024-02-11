@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexts/AppContext';
@@ -27,7 +27,7 @@ const Admin = () => {
 
     document.title = 'LAC | Admin';
     fetchInfo();
-  }, [context]);
+  }, [navigate, context]);
 
   if (!context || !context.state.isLoggedIn) {
     return <p>You must be logged in to access this page.</p>;
