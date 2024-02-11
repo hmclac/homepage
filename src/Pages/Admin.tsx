@@ -206,12 +206,18 @@ const Admin = () => {
   };
 
   async function fetchInfo() {
-    const res = await fetch(`${API_URL}/admin`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
+    if (!context || !context.state.username) return;
+    const res = await fetch(
+      `${API_URL}/admin?staff_name=${encodeURIComponent(
+        context.state.username
+      )}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    }).then((x) => x.json());
+    ).then((x) => x.json());
 
     if (res.error) {
       return console.log(res.error);
