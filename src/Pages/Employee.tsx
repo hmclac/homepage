@@ -36,7 +36,7 @@ const Employee = () => {
 
     fetchCheckouts();
     fetchBikes();
-  }, [navigate, fetchBikes, fetchCheckouts, context]);
+  }, [navigate, context]);
 
   if (!context || !context.state.isLoggedIn) {
     return <p>You must be logged in to access this page.</p>;
