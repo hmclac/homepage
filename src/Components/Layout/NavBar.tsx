@@ -35,14 +35,16 @@ const NavBar = () => {
           <Nav.Link as={Link} to='/'>
             Home
           </Nav.Link>
-
         </Nav>
         <Nav className='ml-auto'>
           {state.isLoggedIn ? (
             <>
-            <Nav.Link as={Link} to='/employee'>
-              Employee
-            </Nav.Link>
+              <Nav.Link as={Link} to='/employee'>
+                Employee
+              </Nav.Link>
+              <Nav.Link as={Link} to='/admin'>
+                Admin
+              </Nav.Link>
             </>
           ) : (
             <>

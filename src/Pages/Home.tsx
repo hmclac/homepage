@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Container, Row, Col, Table } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import styled from 'styled-components';
 import { AppContext } from '../Contexts/AppContext';
@@ -12,8 +12,9 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 } from 'chart.js';
+import { API_URL } from '..';
 
 ChartJS.register(
   CategoryScale,
@@ -28,113 +29,307 @@ ChartJS.register(
 const options = {
   plugins: {
     legend: {
-      display: false, // Hide legend
+      display: false // Hide legend
     },
     title: {
-      display: false, // Hide title
-    },
-  },
+      display: false // Hide title
+    }
+  }
 };
 
-const CustomContainer = styled(Container)`
+export const CustomContainer = styled(Container)`
   background-color: #f8f9fa; // Mimic Jumbotron's light grey background
   padding: 2rem;
   margin-bottom: 20px;
   border-radius: 0.3rem;
 `;
 
+export const H2 = styled.h2`
+  text-align: center;
+`;
+
 const Home = () => {
-  const context = useContext(AppContext);
+  const [occupancy, setOccupancy] = useState<Occupancy>();
+  const [data, setData] = useState<DataState>(defaultState);
 
   useEffect(() => {
-    if (context) {
-      document.title = 'LAC | Home';
-    }
-  }, [context]);
-
-  if (!context) {
-    return null;
-  }
-
-  // Chart.js data setup remains the same
-  const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: '',
-        data: [65, 59, 80, 81, 56, 55, 40], // Adapt with your state data
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
+    if (!occupancy) return;
+    setData({
+      weight_room: {
+        labels: occupancy.weightRoom.data.map((point) => point.time),
+        datasets: [
+          {
+            label: '',
+            data: occupancy.weightRoom.data.map((x) => x.count),
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }
+        ]
       },
-    ],
-  };
+      gym: {
+        labels: occupancy.gym.data.map((point) => point.time),
+        datasets: [
+          {
+            label: '',
+            data: occupancy.gym.data.map((x) => x.count),
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }
+        ]
+      },
+      aerobics_room: {
+        labels: occupancy.aerobics.data.map((point) => point.time),
+        datasets: [
+          {
+            label: '',
+            data: occupancy.aerobics.data.map((x) => x.count),
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }
+        ]
+      },
+      lobby: {
+        labels: occupancy.lobby.data.map((point) => point.time),
+        datasets: [
+          {
+            label: '',
+            data: occupancy.lobby.data.map((x) => x.count),
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }
+        ]
+      }
+    });
+  }, [occupancy]);
 
+  useEffect(() => {
+    document.title = 'LAC | Home';
+    const updateData = async () => {
+      const res = await fetch(API_URL).then((x) => x.json());
+
+      setOccupancy(res as Res);
+      console.log(res);
+    };
+    updateData();
+  }, []);
+  // Chart.js data setup remains the same
+
+  if (!occupancy) {
+    return (
+      <>
+        <p>Loading...</p>
+      </>
+    );
+  }
   return (
-    <Container style={{ padding: '30px 1%' }}>
-      {/* Weight Room Occupancy */}
-      <CustomContainer>
-        <h2>Weight Room Occupancy</h2>
-        <p>
-          Currently reserved:{' '}
-          {context.state.occupancy?.weightRoom.reserved ? 'Yes' : 'No'}
-        </p>
-        <p>Number of people: {context.state.occupancy?.weightRoom.count}</p>
-        <Line data={data} options={options} />{' '}
-        {/* Adapt data for Weight Room */}
-        <p>Last updated: {context.state.occupancy?.weightRoom.lastUpdated}</p>
-      </CustomContainer>
+    <>
+      <Container style={{ padding: '30px 1%' }}>
+        {/* Weight Room Occupancy */}
+        <Row>
+          <Col sm={12} md={6}>
+            <CustomContainer>
+              <H2>Weight Room Occupancy - {occupancy.weightRoom.count}</H2>
+              <p>
+                Currently reserved:
+                {occupancy.weightRoom.reserved ? 'Yes' : 'No'}
+              </p>
+              <Line data={data?.weight_room} options={options} />{' '}
+              {/* Adapt data for Weight Room */}
+              <p>Last updated: {occupancy.headcount_last_updated}</p>
+            </CustomContainer>
+          </Col>
 
-      {/* Gym Occupancy */}
-      <CustomContainer>
-        <h2>Gym Occupancy</h2>
-        <p>
-          Currently reserved:{' '}
-          {context.state.occupancy?.gym.reserved ? 'Yes' : 'No'}
-        </p>
-        <p>Number of people: {context.state.occupancy?.gym.count}</p>
-        <Line data={data} options={options} /> {/* Adapt data for Weight Room */}
-        <p>Last updated: {context.state.occupancy?.gym.lastUpdated}</p>
-      </CustomContainer>
+          <Col sm={12} md={6}>
+            {/* Gym Occupancy */}
+            <CustomContainer>
+              <H2>Gym Occupancy - {occupancy.gym.count}</H2>
+              <p>Currently reserved: {occupancy.gym.reserved ? 'Yes' : 'No'}</p>
+              <Line data={data.gym} options={options} />{' '}
+              {/* Adapt data for Weight Room */}
+              <p>Last updated: {occupancy.headcount_last_updated}</p>
+            </CustomContainer>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12} md={6}>
+            {/* Aerobics Room Occupancy */}
+            <CustomContainer>
+              <H2>Aerobics Room Occupancy - {occupancy.aerobics.count}</H2>
+              <p>
+                Currently reserved: {occupancy.aerobics.reserved ? 'Yes' : 'No'}
+              </p>
+              <Line data={data.aerobics_room} options={options} />{' '}
+              {/* Adapt data for Weight Room */}
+              <p>Last updated: {occupancy.headcount_last_updated}</p>
+            </CustomContainer>
+          </Col>
+          <Col sm={12} md={6}>
+            {/* Lobby Room Occupancy */}
+            <CustomContainer>
+              <H2>Lobby Occupancy - {occupancy.lobby.count}</H2>
+              <Line data={data.aerobics_room} options={options} />{' '}
+              {/* Adapt data for Weight Room */}
+              <p>Last updated: {occupancy.headcount_last_updated}</p>
+            </CustomContainer>
+          </Col>
+        </Row>
 
-      {/* Aerobics Room Occupancy */}
-      <CustomContainer>
-        <h2>Aerobics Room Occupancy</h2>
-        <p>
-          Currently reserved:{' '}
-          {context.state.occupancy?.aerobics.reserved ? 'Yes' : 'No'}
-        </p>
-        <p>Number of people: {context.state.occupancy?.aerobics.count}</p>
-        <Line data={data} options={options} /> {/* Adapt data for Weight Room */}
-        <p>Last updated: {context.state.occupancy?.aerobics.lastUpdated}</p>
-      </CustomContainer>
-
-      {/* Equipment Availability */}
-      <CustomContainer>
-        <h2>Equipment Availability</h2>
-        <p>
-          Pool 1: {context.state.occupancy?.equipment.pool1 ? 'Taken' : 'Free'}
-        </p>
-        <p>
-          Pool 2: {context.state.occupancy?.equipment.pool2 ? 'Taken' : 'Free'}
-        </p>
-        <p>
-          Ping Pong 1:{' '}
-          {context.state.occupancy?.equipment.pingpong1 ? 'Taken' : 'Free'}
-        </p>
-        <p>
-          Ping Pong 2:{' '}
-          {context.state.occupancy?.equipment.pingpong2 ? 'Taken' : 'Free'}
-        </p>
-        <p>
-          Basketballs - Free:{' '}
-          {context.state.occupancy?.equipment.basketballs.available}, Taken:{' '}
-          {context.state.occupancy?.equipment.basketballs.taken}
-        </p>
-        <p>Last updated: {context.state.occupancy?.equipment.lastUpdated}</p>
-      </CustomContainer>
-    </Container>
+        {/* Equipment Availability Table */}
+        <CustomContainer>
+          <h2>Equipment Availability</h2>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Checked Out For</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(occupancy!.checkout).map((key) => {
+                const item = occupancy!.checkout[key];
+                return (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>{item ? item.checked_out_for : 'N/A'}</td>
+                    <td>{item ? 'Unavailable' : 'Available'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <p>Last updated: {occupancy.checkoutUpdate || 'N/A'}</p>
+        </CustomContainer>
+        {/* Equipment Availability Table */}
+        <CustomContainer>
+          <h2>Mudderbike Availability</h2>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Bike Number</th>
+                <th>Checked Out Since</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(occupancy!.bikes).map((key: string) => {
+                const item = occupancy!.bikes[key];
+                return (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>
+                      {item
+                        ? new Date(
+                            Number(item.checked_out_for)
+                          ).toLocaleDateString()
+                        : 'N/A'}
+                    </td>
+                    <td>{item ? 'Unavailable' : 'Available'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <p>Last updated: {occupancy.bikeUpdate || 'N/A'}</p>
+        </CustomContainer>
+      </Container>
+    </>
   );
 };
 
 export { Home };
+
+const defaultState = {
+  weight_room: {
+    labels: [],
+    datasets: [
+      {
+        label: '',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }
+    ]
+  },
+  gym: {
+    labels: [],
+    datasets: [
+      {
+        label: '',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }
+    ]
+  },
+  aerobics_room: {
+    labels: [],
+    datasets: [
+      {
+        label: '',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }
+    ]
+  },
+  lobby: {
+    labels: [],
+    datasets: [
+      {
+        label: '',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }
+    ]
+  }
+};
+
+type Data = {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    fill: boolean;
+    borderColor: string;
+    tension: number;
+  }[];
+};
+
+type DataState = {
+  weight_room: Data;
+  gym: Data;
+  aerobics_room: Data;
+  lobby: Data;
+};
+
+type Occupancy = Res;
+
+type Res = {
+  headcount_last_updated: string;
+  weightRoom: Room;
+  gym: Room;
+  aerobics: Room;
+  lobby: Room;
+  checkout: {
+    // [key: string]: { number: number; checked_out_for: string } | false;
+    [key: string]: any;
+  };
+  bikes: {
+    [key: string]: any;
+  };
+  bikeUpdate: string;
+  checkoutUpdate: string;
+};
+type Room = { reserved?: boolean; count: number; data: Occ[] };
+
+type Occ = { time: string; count: number };

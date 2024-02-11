@@ -10,9 +10,10 @@ import { Home } from './Pages/Home';
 import { Login } from './Pages/Login';
 import { NotFound } from './Pages/404';
 import { Employee } from './Pages/Employee';
+import { Admin } from './Pages/Admin';
 
 // process.env.URL = 'http://localhost:3000';
-// export const API_URL = 'https://hmc-lac.mooo.com';
+export const API_URL = 'http://localhost:5000';
 
 const router = createBrowserRouter([
   {
@@ -22,8 +23,9 @@ const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: '/login', element: <Login /> },
       { path: '/employee', element: <Employee /> },
-    ],
-  },
+      { path: '/admin', element: <Admin /> }
+    ]
+  }
 ]);
 
 createRoot(document.getElementById('root') as HTMLElement).render(

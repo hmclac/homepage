@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { AppContext } from '../Contexts/AppContext';
-// import { API_URL } from '..';
+import { API_URL } from '..';
 
 const StyledForm = styled(Form)`
   max-width: 500px;
@@ -20,7 +20,7 @@ const StyledForm = styled(Form)`
 
 export const Login = () => {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
 
   const context = useContext(AppContext);
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export const Login = () => {
   });
   useEffect(() => {
     if (context && context.state.isLoggedIn) {
-      navigate('/');
+      navigate('/employee');
     }
   }, [context?.state.isLoggedIn, navigate]);
 
@@ -50,29 +50,31 @@ export const Login = () => {
   const handleLogin = async (e: Event | any) => {
     e.preventDefault();
 
-    // const res: {
-    //   username?: string;
-    //   profilePic?: string;
-    //   error?: string;
-    //   message?: string;
-    // } = await fetch(`${(API_URL as string) + '/user/login'}`, {
-    //   method: 'POST',
-    //   body: JSON.stringify({ username, password }),
-    //   headers: { 'Content-Type': 'application/json' },
-    //   credentials: 'include',
-    // }).then((x) => x.json());
-    // if (res.error) {
-    //   // display error somewhere
-    // }
-    // if (res.message === 'Successfully logged in') {
-    //   setState({ ...state, username: res.username, isLoggedIn: true });
-    // }
+    try {
+      const res: {
+        error?: string;
+        message?: string;
+      } = await fetch(`${(API_URL as string) + '/login'}`, {
+        method: 'POST',
+        body: JSON.stringify({ staff_name: username }),
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      }).then((x) => x.json());
+      if (res.error) {
+        return alert(res.error);
+      }
+      if (res.message) {
+        setState({ ...state, isLoggedIn: true, username });
+      }
+    } catch (e) {
+      alert(e);
+    }
   };
 
   return (
     <StyledForm onSubmit={handleLogin}>
       <Form.Group controlId='formUsername'>
-        <Form.Label>Username</Form.Label>
+        <Form.Label>Staff Username</Form.Label>
         <Form.Control
           type='text'
           placeholder='Enter username'
@@ -81,7 +83,7 @@ export const Login = () => {
         />
       </Form.Group>
 
-      <Form.Group controlId='formPassword'>
+      {/* <Form.Group controlId='formPassword'>
         <Form.Label>Password</Form.Label>
         <Form.Control
           type='password'
@@ -89,7 +91,7 @@ export const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </Form.Group>
+      </Form.Group> */}
 
       <Button variant='primary' type='submit'>
         Login

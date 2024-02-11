@@ -5,30 +5,47 @@ import React, { createContext, useState, useEffect, ReactNode } from 'react';
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
-  children,
+  children
 }) => {
   // Define the default state
   const defaultState: AppState = {
     username: undefined,
     isLoggedIn: false,
     occupancy: {
+      headcount_last_update: '00:00',
       weightRoom: {
         reserved: false,
         count: 0,
-        graphData: [],
-        lastUpdated: 0,
+        data: []
       },
       gym: {
         reserved: false,
         count: 0,
-        graphData: [],
-        lastUpdated: 0,
+        data: []
       },
       aerobics: {
         reserved: false,
         count: 0,
-        graphData: [],
-        lastUpdated: 0,
+        data: []
+      },
+      lobby: {
+        reserved: false,
+        count: 0,
+        data: []
+      },
+      bikes: {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: false,
+        7: false,
+        8: false,
+        9: false,
+        11: false,
+        12: false,
+        69: false
       },
       equipment: {
         pool1: false,
@@ -37,14 +54,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         pingpong2: false,
         basketballs: { taken: 0, available: 0 },
         volleyballs: { taken: 0, available: 0 },
-        lastUpdated: 0,
-      },
-    },
+        lastUpdated: 0
+      }
+    }
   };
 
   const [state, setState] = useState<AppState>(() => {
     const storedState = localStorage.getItem('state');
-    return storedState ? JSON.parse(storedState) : defaultState;
+    return defaultState;
+
+    // return storedState ? JSON.parse(storedState) : defaultState;
   });
 
   useEffect(() => {}, []);
@@ -59,22 +78,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 export interface RoomOccupancy {
   reserved: boolean;
   count: number;
-  graphData: { time: string; count: number }[];
-  lastUpdated: number;
+  data: { time: string; count: number }[];
 }
 
 export interface Occupancy {
+  headcount_last_update: string;
   weightRoom: RoomOccupancy;
   gym: RoomOccupancy;
   aerobics: RoomOccupancy;
-  equipment: {
-    pool1: boolean;
-    pool2: boolean;
-    pingpong1: boolean;
-    pingpong2: boolean;
-    basketballs: { taken: number; available: number };
-    volleyballs: { taken: number; available: number };
-    lastUpdated: number;
+  lobby: RoomOccupancy;
+  equipment: any;
+  bikes: {
+    [key: number]: boolean;
   };
 }
 
