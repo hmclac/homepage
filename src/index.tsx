@@ -13,7 +13,8 @@ import { Employee } from './Pages/Employee';
 import { Admin } from './Pages/Admin';
 
 // process.env.URL = 'http://localhost:3000';
-export const API_URL = 'http://localhost:5000';
+// export const API_URL = 'http://localhost:5000';
+export const API_URL = 'https://stryfe-backend.mooo.com';
 
 const router = createBrowserRouter([
   {
