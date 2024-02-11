@@ -62,14 +62,15 @@ const Home = () => {
   const [data, setData] = useState<DataState>(defaultState);
 
   useEffect(() => {
+    console.log(occupancy);
     if (!occupancy) return;
     setData({
       weight_room: {
-        labels: occupancy.weightRoom.data.map((point) => point.time),
+        labels: occupancy?.weightRoom?.data.map((point) => point.time),
         datasets: [
           {
             label: '',
-            data: occupancy.weightRoom.data.map((x) => x.count),
+            data: occupancy?.weightRoom?.data.map((x) => x.count),
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
@@ -77,11 +78,11 @@ const Home = () => {
         ]
       },
       gym: {
-        labels: occupancy.gym.data.map((point) => point.time),
+        labels: occupancy?.gym.data.map((point) => point.time),
         datasets: [
           {
             label: '',
-            data: occupancy.gym.data.map((x) => x.count),
+            data: occupancy?.gym.data.map((x) => x.count),
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
@@ -89,11 +90,11 @@ const Home = () => {
         ]
       },
       aerobics_room: {
-        labels: occupancy.aerobics.data.map((point) => point.time),
+        labels: occupancy?.aerobics.data.map((point) => point.time),
         datasets: [
           {
             label: '',
-            data: occupancy.aerobics.data.map((x) => x.count),
+            data: occupancy?.aerobics.data.map((x) => x.count),
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
@@ -101,11 +102,11 @@ const Home = () => {
         ]
       },
       lobby: {
-        labels: occupancy.lobby.data.map((point) => point.time),
+        labels: occupancy?.lobby.data.map((point) => point.time),
         datasets: [
           {
             label: '',
-            data: occupancy.lobby.data.map((x) => x.count),
+            data: occupancy?.lobby.data.map((x) => x.count),
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
@@ -142,25 +143,27 @@ const Home = () => {
         <Row>
           <Col sm={12} md={6}>
             <CustomContainer>
-              <H2>Weight Room Occupancy - {occupancy.weightRoom.count}</H2>
+              <H2>Weight Room Occupancy - {occupancy?.weightRoom?.count}</H2>
               <p>
                 Currently reserved:
-                {occupancy.weightRoom.reserved ? 'Yes' : 'No'}
+                {occupancy?.weightRoom?.reserved ? 'Yes' : 'No'}
               </p>
               <Line data={data?.weight_room} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy.headcount_last_updated}</p>
+              <p>Last updated: {occupancy?.headcount_last_updated}</p>
             </CustomContainer>
           </Col>
 
           <Col sm={12} md={6}>
             {/* Gym Occupancy */}
             <CustomContainer>
-              <H2>Gym Occupancy - {occupancy.gym.count}</H2>
-              <p>Currently reserved: {occupancy.gym.reserved ? 'Yes' : 'No'}</p>
+              <H2>Gym Occupancy - {occupancy?.gym.count}</H2>
+              <p>
+                Currently reserved: {occupancy?.gym.reserved ? 'Yes' : 'No'}
+              </p>
               <Line data={data.gym} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy.headcount_last_updated}</p>
+              <p>Last updated: {occupancy?.headcount_last_updated}</p>
             </CustomContainer>
           </Col>
         </Row>
@@ -168,22 +171,23 @@ const Home = () => {
           <Col sm={12} md={6}>
             {/* Aerobics Room Occupancy */}
             <CustomContainer>
-              <H2>Aerobics Room Occupancy - {occupancy.aerobics.count}</H2>
+              <H2>Aerobics Room Occupancy - {occupancy?.aerobics.count}</H2>
               <p>
-                Currently reserved: {occupancy.aerobics.reserved ? 'Yes' : 'No'}
+                Currently reserved:{' '}
+                {occupancy?.aerobics.reserved ? 'Yes' : 'No'}
               </p>
               <Line data={data.aerobics_room} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy.headcount_last_updated}</p>
+              <p>Last updated: {occupancy?.headcount_last_updated}</p>
             </CustomContainer>
           </Col>
           <Col sm={12} md={6}>
             {/* Lobby Room Occupancy */}
             <CustomContainer>
-              <H2>Lobby Occupancy - {occupancy.lobby.count}</H2>
+              <H2>Lobby Occupancy - {occupancy?.lobby.count}</H2>
               <Line data={data.aerobics_room} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy.headcount_last_updated}</p>
+              <p>Last updated: {occupancy?.headcount_last_updated}</p>
             </CustomContainer>
           </Col>
         </Row>
@@ -200,8 +204,8 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {occupancy.checkout &&
-                Object.keys(occupancy.checkout).map((key) => {
+              {occupancy?.checkout &&
+                Object.keys(occupancy?.checkout).map((key) => {
                   const item = occupancy!.checkout[key];
                   return (
                     <tr key={key}>
@@ -213,7 +217,7 @@ const Home = () => {
                 })}
             </tbody>
           </Table>
-          <p>Last updated: {occupancy.checkoutUpdate || 'N/A'}</p>
+          <p>Last updated: {occupancy?.checkoutUpdate || 'N/A'}</p>
         </CustomContainer>
         {/* Equipment Availability Table */}
         <CustomContainer>
@@ -227,8 +231,8 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {occupancy.bikes &&
-                Object.keys(occupancy.bikes).map((key: string) => {
+              {occupancy?.bikes &&
+                Object.keys(occupancy?.bikes).map((key: string) => {
                   const item = occupancy!.bikes[key];
                   return (
                     <tr key={key}>
@@ -246,7 +250,7 @@ const Home = () => {
                 })}
             </tbody>
           </Table>
-          <p>Last updated: {occupancy.bikeUpdate || 'N/A'}</p>
+          <p>Last updated: {occupancy?.bikeUpdate || 'N/A'}</p>
         </CustomContainer>
       </Container>
     </>
