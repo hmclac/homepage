@@ -35,6 +35,9 @@ const NavBar = () => {
           <Nav.Link as={Link} to='/'>
             Home
           </Nav.Link>
+          <Nav.Link as={Link} to='/history'>
+            History
+          </Nav.Link>
         </Nav>
         <Nav className='ml-auto'>
           {state.isLoggedIn ? (

@@ -62,7 +62,6 @@ const Home = () => {
   const [data, setData] = useState<DataState>(defaultState);
 
   useEffect(() => {
-    console.log(occupancy);
     if (!occupancy) return;
     setData({
       weight_room: {

@@ -208,9 +208,7 @@ const Admin = () => {
   async function fetchInfo() {
     if (!context || !context.state.username) return;
     const res = await fetch(
-      `${API_URL}/admin?staff_name=${encodeURIComponent(
-        context.state.username
-      )}`,
+      `${API_URL}/admin?staff_name=${encodeURIComponent(context.state.username)}`,
       {
         method: 'GET',
         headers: {
