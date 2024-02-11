@@ -238,18 +238,19 @@ const Admin = () => {
               </tr>
             </thead>
             <tbody>
-              {equipment.map((x, i) => (
-                <tr key={i}>
-                  <td>{x}</td>
-                  <td>
-                    <Button
-                      variant='warning'
-                      onClick={() => handleDeleteEquipment(x)}>
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {equipment &&
+                equipment.map((x, i) => (
+                  <tr key={i}>
+                    <td>{x}</td>
+                    <td>
+                      <Button
+                        variant='warning'
+                        onClick={() => handleDeleteEquipment(x)}>
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               <tr>
                 <td>
                   <Form.Control
@@ -282,18 +283,19 @@ const Admin = () => {
               </tr>
             </thead>
             <tbody>
-              {bikes.map((x, i) => (
-                <tr key={i}>
-                  <td>{x}</td>
-                  <td>
-                    <Button
-                      variant='warning'
-                      onClick={() => handleDeleteBike(Number(x))}>
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {bikes &&
+                bikes.map((x, i) => (
+                  <tr key={i}>
+                    <td>{x}</td>
+                    <td>
+                      <Button
+                        variant='warning'
+                        onClick={() => handleDeleteBike(Number(x))}>
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               <tr>
                 <td>
                   <Form.Control
@@ -324,18 +326,19 @@ const Admin = () => {
               </tr>
             </thead>
             <tbody>
-              {bans.map((ban, i) => (
-                <tr key={i}>
-                  <td>{ban}</td>
-                  <td>
-                    <Button
-                      variant='warning'
-                      onClick={() => handleDeleteBan(ban)}>
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {bans &&
+                bans.map((ban, i) => (
+                  <tr key={i}>
+                    <td>{ban}</td>
+                    <td>
+                      <Button
+                        variant='warning'
+                        onClick={() => handleDeleteBan(ban)}>
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               <tr>
                 <td>
                   <Form.Control
@@ -366,18 +369,19 @@ const Admin = () => {
               </tr>
             </thead>
             <tbody>
-              {bikeBans.map((ban, i) => (
-                <tr key={i}>
-                  <td>{ban}</td>
-                  <td>
-                    <Button
-                      variant='warning'
-                      onClick={() => handleDeleteBikeBan(ban)}>
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {bikeBans &&
+                bikeBans.map((ban, i) => (
+                  <tr key={i}>
+                    <td>{ban}</td>
+                    <td>
+                      <Button
+                        variant='warning'
+                        onClick={() => handleDeleteBikeBan(ban)}>
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               <tr>
                 <td>
                   <Form.Control

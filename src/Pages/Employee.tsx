@@ -463,7 +463,7 @@ const Employee = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(checkouts).map(([key, checkout]) =>
+              {checkouts && Object.entries(checkouts).map(([key, checkout]) =>
                 !checkout.rented ? (
                   <tr key={key}>
                     <td>{key}</td>
@@ -554,7 +554,7 @@ const Employee = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(bikes).map(([key, bike]) =>
+              {bikes && Object.entries(bikes).map(([key, bike]) =>
                 !bike.rented ? (
                   <tr key={key}>
                     <td>{key}</td>
