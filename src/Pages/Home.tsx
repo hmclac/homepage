@@ -190,16 +190,17 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.keys(occupancy!.checkout).map((key) => {
-                const item = occupancy!.checkout[key];
-                return (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>{item ? item.checked_out_for : 'N/A'}</td>
-                    <td>{item ? 'Unavailable' : 'Available'}</td>
-                  </tr>
-                );
-              })}
+              {occupancy.checkout &&
+                Object.keys(occupancy.checkout).map((key) => {
+                  const item = occupancy!.checkout[key];
+                  return (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{item ? item.checked_out_for : 'N/A'}</td>
+                      <td>{item ? 'Unavailable' : 'Available'}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
           <p>Last updated: {occupancy.checkoutUpdate || 'N/A'}</p>
@@ -216,22 +217,23 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.keys(occupancy!.bikes).map((key: string) => {
-                const item = occupancy!.bikes[key];
-                return (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>
-                      {item
-                        ? new Date(
-                            Number(item.checked_out_for)
-                          ).toLocaleDateString()
-                        : 'N/A'}
-                    </td>
-                    <td>{item ? 'Unavailable' : 'Available'}</td>
-                  </tr>
-                );
-              })}
+              {occupancy.bikes &&
+                Object.keys(occupancy.bikes).map((key: string) => {
+                  const item = occupancy!.bikes[key];
+                  return (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>
+                        {item
+                          ? new Date(
+                              Number(item.checked_out_for)
+                            ).toLocaleDateString()
+                          : 'N/A'}
+                      </td>
+                      <td>{item ? 'Unavailable' : 'Available'}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
           <p>Last updated: {occupancy.bikeUpdate || 'N/A'}</p>
