@@ -108,9 +108,6 @@ const Employee = () => {
     } else {
       formattedSwipeData = '0000000000';
     }
-    console.log(rawSwipeData);
-    console.log(formattedSwipeData);
-    console.log(!/^\d{9}$/.test(formattedSwipeData));
     const payload = {
       staff_name: context.state.username,
       student_id: formattedSwipeData
@@ -168,7 +165,9 @@ const Employee = () => {
   };
 
   const handleHeadcountChange = (field: keyof Headcount, value: any) => {
-    setHeadcount({ ...headcount, [field]: Number(value) });
+    const numValue = Number(value);
+    if (isNaN(numValue) && numValue < 0) return;
+    setHeadcount({ ...headcount, [field]: numValue });
   };
 
   const handleSubmitHeadcount = async () => {
@@ -463,74 +462,75 @@ const Employee = () => {
               </tr>
             </thead>
             <tbody>
-              {checkouts && Object.entries(checkouts).map(([key, checkout]) =>
-                !checkout.rented ? (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>
-                      <Form.Control
-                        type='text'
-                        value={checkout.student_name || ''}
-                        onChange={(e) =>
-                          handleCheckoutChange(
-                            key,
-                            'student_name',
-                            e.target.value
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <Form.Control
-                        type='text'
-                        value={checkout.student_id || ''}
-                        onChange={(e) =>
-                          handleCheckoutChange(
-                            key,
-                            'student_id',
-                            e.target.value
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <Form.Control
-                        type='text'
-                        value={checkout.email || ''}
-                        onChange={(e) =>
-                          handleCheckoutChange(key, 'email', e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>Now</td>
-                    <td>{context.state.username} (You)</td>
-                    <td>
-                      <Button
-                        variant='success'
-                        onClick={() => handleCheckoutEquipment(key)}>
-                        Check Out
-                      </Button>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>{checkout.student_name}</td>
-                    <td>{checkout.student_id}</td>
-                    <td>{checkout.email}</td>
-                    <td>{checkout.time_checked_out}</td>
-                    <td>{checkout.rented_staff}</td>
+              {checkouts &&
+                Object.entries(checkouts).map(([key, checkout]) =>
+                  !checkout.rented ? (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={checkout.student_name || ''}
+                          onChange={(e) =>
+                            handleCheckoutChange(
+                              key,
+                              'student_name',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={checkout.student_id || ''}
+                          onChange={(e) =>
+                            handleCheckoutChange(
+                              key,
+                              'student_id',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={checkout.email || ''}
+                          onChange={(e) =>
+                            handleCheckoutChange(key, 'email', e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>Now</td>
+                      <td>{context.state.username} (You)</td>
+                      <td>
+                        <Button
+                          variant='success'
+                          onClick={() => handleCheckoutEquipment(key)}>
+                          Check Out
+                        </Button>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{checkout.student_name}</td>
+                      <td>{checkout.student_id}</td>
+                      <td>{checkout.email}</td>
+                      <td>{checkout.time_checked_out}</td>
+                      <td>{checkout.rented_staff}</td>
 
-                    <td>
-                      <Button
-                        variant='warning'
-                        onClick={() => handleReturnEquipment(key)}>
-                        Return
-                      </Button>
-                    </td>
-                  </tr>
-                )
-              )}
+                      <td>
+                        <Button
+                          variant='warning'
+                          onClick={() => handleReturnEquipment(key)}>
+                          Return
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                )}
             </tbody>
           </Table>
         </Col>
@@ -554,91 +554,96 @@ const Employee = () => {
               </tr>
             </thead>
             <tbody>
-              {bikes && Object.entries(bikes).map(([key, bike]) =>
-                !bike.rented ? (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>
-                      <Form.Control
-                        type='text'
-                        value={bike.student_name || ''}
-                        onChange={(e) =>
-                          handleBikeChange(
-                            Number(key),
-                            'student_name',
-                            e.target.value
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <Form.Control
-                        type='text'
-                        value={bike.student_id || ''}
-                        onChange={(e) =>
-                          handleBikeChange(
-                            Number(key),
-                            'student_id',
-                            e.target.value
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <Form.Control
-                        type='text'
-                        value={bike.email || ''}
-                        onChange={(e) =>
-                          handleBikeChange(Number(key), 'email', e.target.value)
-                        }
-                      />
-                    </td>
+              {bikes &&
+                Object.entries(bikes).map(([key, bike]) =>
+                  !bike.rented ? (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={bike.student_name || ''}
+                          onChange={(e) =>
+                            handleBikeChange(
+                              Number(key),
+                              'student_name',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={bike.student_id || ''}
+                          onChange={(e) =>
+                            handleBikeChange(
+                              Number(key),
+                              'student_id',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={bike.email || ''}
+                          onChange={(e) =>
+                            handleBikeChange(
+                              Number(key),
+                              'email',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </td>
 
-                    <td>Now</td>
+                      <td>Now</td>
 
-                    <td>
-                      {new Date(Date.now() + 86400000).toLocaleDateString()}
-                    </td>
+                      <td>
+                        {new Date(Date.now() + 86400000).toLocaleDateString()}
+                      </td>
 
-                    <td>{context.state.username} (You)</td>
-                    <td>{bike.renews}</td>
-                    <td>
-                      {/* Placeholder for action buttons (e.g., return bike) */}
-                      <Button
-                        variant='success'
-                        onClick={() => handleCheckoutBike(Number(key))}>
-                        Check Out
-                      </Button>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={key}>
-                    <td style={{ width: '5px' }}> {key}</td>
-                    <td>{bike.student_name}</td>
-                    <td>{bike.student_id}</td>
-                    <td>{bike.email}</td>
-                    <td>{bike.time_checked_out}</td>
-                    <td>{bike.date_due}</td>
-                    <td>{bike.rented_staff}</td>
-                    <td>{bike.renews}</td>
-                    <td>
-                      <div className='d-flex justify-content-around'>
+                      <td>{context.state.username} (You)</td>
+                      <td>{bike.renews}</td>
+                      <td>
+                        {/* Placeholder for action buttons (e.g., return bike) */}
                         <Button
-                          variant='warning'
-                          onClick={() => handleReturnBike(Number(key))}
-                          className='me-2'>
-                          Return
+                          variant='success'
+                          onClick={() => handleCheckoutBike(Number(key))}>
+                          Check Out
                         </Button>
-                        <Button
-                          variant='info'
-                          onClick={() => handleRenewBike(Number(key))}>
-                          Renew
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              )}
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr key={key}>
+                      <td style={{ width: '5px' }}> {key}</td>
+                      <td>{bike.student_name}</td>
+                      <td>{bike.student_id}</td>
+                      <td>{bike.email}</td>
+                      <td>{bike.time_checked_out}</td>
+                      <td>{bike.date_due}</td>
+                      <td>{bike.rented_staff}</td>
+                      <td>{bike.renews}</td>
+                      <td>
+                        <div className='d-flex justify-content-around'>
+                          <Button
+                            variant='warning'
+                            onClick={() => handleReturnBike(Number(key))}
+                            className='me-2'>
+                            Return
+                          </Button>
+                          <Button
+                            variant='info'
+                            onClick={() => handleRenewBike(Number(key))}>
+                            Renew
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                )}
             </tbody>
           </Table>
         </Col>
