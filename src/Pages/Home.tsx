@@ -124,6 +124,9 @@ const Home = () => {
       } catch (e) {
         return <p>Server could not be reached</p>;
       }
+      if (res.error) {
+        return <p>{res.error}</p>;
+      }
       setOccupancy(res as Res);
     };
     updateData();
