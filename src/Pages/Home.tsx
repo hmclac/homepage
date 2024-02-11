@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import styled from 'styled-components';
-import { AppContext } from '../Contexts/AppContext';
 
 import {
   Chart as ChartJS,
@@ -109,14 +108,15 @@ const Home = () => {
   useEffect(() => {
     document.title = 'LAC | Home';
     const updateData = async () => {
-      const res = await fetch(API_URL).then((x) => x.json());
-
+      try {
+        var res = await fetch(API_URL).then((x) => x.json());
+      } catch (e) {
+        return <p>Server could not be reached</p>;
+      }
       setOccupancy(res as Res);
-      console.log(res);
     };
     updateData();
   }, []);
-  // Chart.js data setup remains the same
 
   if (!occupancy) {
     return (

@@ -13,11 +13,6 @@ const StyledForm = styled(Form)`
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
-
-// const StyledButton = styled(Button)`
-//   width: 100%;
-// `;
-
 export const Login = () => {
   const [username, setUsername] = useState('');
   // const [password, setPassword] = useState('');
@@ -37,9 +32,9 @@ export const Login = () => {
 
   useEffect(() => {
     // Update local storage when isLoggedIn changes
-    if (context && context.state.isLoggedIn) {
-      localStorage.setItem('state', JSON.stringify(context.state));
-    }
+    // if (context && context.state.isLoggedIn) {
+    //   localStorage.setItem('state', JSON.stringify(context.state));
+    // }
   }, [context?.state.isLoggedIn]);
   if (!context) {
     return null;

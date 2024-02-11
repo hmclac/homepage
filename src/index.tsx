@@ -18,7 +18,7 @@ export const API_URL = 'http://localhost:5000';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />, // App is now a layout component for your routes
+    element: <App />,
     children: [
       { path: '/', element: <Home /> },
       { path: '/login', element: <Login /> },

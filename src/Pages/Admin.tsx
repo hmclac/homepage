@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexts/AppContext';
 import { API_URL } from '..';
 import { CustomContainer, H2 } from './Home';
-import { styled } from 'styled-components';
 import { H1 } from './Employee';
 
 const Admin = () => {

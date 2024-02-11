@@ -2,12 +2,9 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 
-import styled from 'styled-components';
-
 import { AppContext } from '../../Contexts/AppContext';
 
 import { navbarLight } from '../App';
-import { API_URL } from '../..';
 
 const NavBar = () => {
   const context = useContext(AppContext);
