@@ -609,6 +609,19 @@ const Employee = () => {
                           }
                         />
                       </td>
+                      <td>
+                        <Form.Control
+                          type='text'
+                          value={bike.lock || ''}
+                          onChange={(e) =>
+                            handleBikeChange(
+                              Number(key),
+                              'lock',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </td>
 
                       <td>Now</td>
 
