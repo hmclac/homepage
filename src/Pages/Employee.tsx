@@ -646,6 +646,7 @@ const Employee = () => {
                       <td>{bike.student_name}</td>
                       <td>{bike.student_id}</td>
                       <td>{bike.email}</td>
+                      <td>{bike.lock}</td>
                       <td>{bike.time_checked_out}</td>
                       <td>{bike.date_due}</td>
                       <td>{bike.rented_staff}</td>
