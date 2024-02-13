@@ -18,7 +18,7 @@ const defaultHeadcount: Headcount = {
   lobby: 0,
   weight_reserved: false,
   gym_reserved: false,
-  aerobics_reserved: false
+  aerobics_reserved: false,
 };
 
 const Employee = () => {
@@ -34,12 +34,12 @@ const Employee = () => {
   const fetchCheckouts = async (username: string) => {
     const res: CheckoutData = await fetch(`${API_URL}/checkout`, {
       body: JSON.stringify({
-        staff_name: username
+        staff_name: username,
       }),
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -54,12 +54,12 @@ const Employee = () => {
           student_id: '',
           student_name: '',
           time_checked_out: '',
-          rented_staff: ''
+          rented_staff: '',
         };
       } else {
         res[key] = {
           ...res[key],
-          rented: true
+          rented: true,
         };
       }
     }
@@ -69,13 +69,13 @@ const Employee = () => {
   const fetchBikes = async (username: string) => {
     const res = await fetch(`${API_URL}/bikes`, {
       body: JSON.stringify({
-        staff_name: username
+        staff_name: username,
       }),
       method: 'PUT',
 
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -100,7 +100,8 @@ const Employee = () => {
   const handleSwipe = async (e: any) => {
     e.preventDefault();
 
-    let rawSwipeData = swipeData.trim().replace(/^;|\?$/g, '');
+    let rawSwipeData = swipeData.trim().replace(/^;?(\d{10})\D.*$/, '$1');
+
     let formattedSwipeData: string;
 
     if (/^\d{10}$/.test(rawSwipeData)) {
@@ -110,15 +111,15 @@ const Employee = () => {
     }
     const payload = {
       staff_name: context.state.username,
-      student_id: formattedSwipeData
+      student_id: formattedSwipeData,
     };
 
     const data = await fetch(`${API_URL}/swipe`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     }).then((response) => response.json());
 
     if (data.error) {
@@ -131,7 +132,7 @@ const Employee = () => {
           ? 'Invalid Swipe'
           : formattedSwipeData,
       time: new Date().toLocaleTimeString(),
-      banned: data.banned
+      banned: data.banned,
     });
 
     setSwipeData('');
@@ -150,7 +151,7 @@ const Employee = () => {
   ) => {
     setCheckouts((prev) => ({
       ...prev,
-      [key]: { ...prev[key], [field]: value }
+      [key]: { ...prev[key], [field]: value },
     }));
   };
 
@@ -178,7 +179,7 @@ const Employee = () => {
       aerobics_room,
       weight_reserved,
       gym_reserved,
-      aerobics_reserved
+      aerobics_reserved,
     } = headcount;
     const res = await fetch(`${API_URL}/headcount`, {
       method: 'POST',
@@ -190,11 +191,11 @@ const Employee = () => {
         aerobics_room,
         weight_reserved,
         gym_reserved,
-        aerobics_reserved
+        aerobics_reserved,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -226,11 +227,11 @@ const Employee = () => {
         student_id,
         email,
         student_name,
-        update_type: 'rent'
+        update_type: 'rent',
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -247,8 +248,8 @@ const Employee = () => {
         time_checked_out: new Date(
           Number(res.time_checked_out)
         ).toLocaleTimeString(),
-        rented_staff: context.state.username!
-      }
+        rented_staff: context.state.username!,
+      },
     });
   };
 
@@ -260,11 +261,11 @@ const Employee = () => {
       body: JSON.stringify({
         staff_name: context.state.username,
         equipment_type: key,
-        update_type: 'return'
+        update_type: 'return',
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -278,8 +279,8 @@ const Employee = () => {
         student_id: '',
         student_name: '',
         time_checked_out: '',
-        rented_staff: ''
-      }
+        rented_staff: '',
+      },
     });
   };
 
@@ -300,11 +301,11 @@ const Employee = () => {
         email,
         student_name,
         update_type: 'rent',
-        bike_number: key
+        bike_number: key,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -321,8 +322,8 @@ const Employee = () => {
         student_name,
         time_checked_out: res.time_checked_out,
         rented_staff: context.state.username!,
-        renews: 0
-      }
+        renews: 0,
+      },
     });
   };
 
@@ -338,11 +339,11 @@ const Employee = () => {
       body: JSON.stringify({
         staff_name: context.state.username,
         update_type: 'return',
-        bike_number: key
+        bike_number: key,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -359,8 +360,8 @@ const Employee = () => {
         student_name: '',
         time_checked_out: '',
         rented_staff: '',
-        renews: 0
-      }
+        renews: 0,
+      },
     });
   };
 
@@ -376,11 +377,11 @@ const Employee = () => {
       body: JSON.stringify({
         staff_name: context.state.username,
         update_type: 'renew',
-        bike_number: key
+        bike_number: key,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((x) => x.json());
 
     if (res.error) {
@@ -391,8 +392,8 @@ const Employee = () => {
       [key]: {
         ...bike,
         renews: bike.renews + 1,
-        date_due: res.date_due
-      }
+        date_due: res.date_due,
+      },
     });
   };
 
@@ -507,7 +508,8 @@ const Employee = () => {
                       <td>
                         <Button
                           variant='success'
-                          onClick={() => handleCheckoutEquipment(key)}>
+                          onClick={() => handleCheckoutEquipment(key)}
+                        >
                           Check Out
                         </Button>
                       </td>
@@ -524,7 +526,8 @@ const Employee = () => {
                       <td>
                         <Button
                           variant='warning'
-                          onClick={() => handleReturnEquipment(key)}>
+                          onClick={() => handleReturnEquipment(key)}
+                        >
                           Return
                         </Button>
                       </td>
@@ -611,7 +614,8 @@ const Employee = () => {
                         {/* Placeholder for action buttons (e.g., return bike) */}
                         <Button
                           variant='success'
-                          onClick={() => handleCheckoutBike(Number(key))}>
+                          onClick={() => handleCheckoutBike(Number(key))}
+                        >
                           Check Out
                         </Button>
                       </td>
@@ -631,12 +635,14 @@ const Employee = () => {
                           <Button
                             variant='warning'
                             onClick={() => handleReturnBike(Number(key))}
-                            className='me-2'>
+                            className='me-2'
+                          >
                             Return
                           </Button>
                           <Button
                             variant='info'
-                            onClick={() => handleRenewBike(Number(key))}>
+                            onClick={() => handleRenewBike(Number(key))}
+                          >
                             Renew
                           </Button>
                         </div>
