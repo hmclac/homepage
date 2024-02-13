@@ -60,6 +60,10 @@ export const Login = () => {
       }
       if (res.message) {
         setState({ ...state, isLoggedIn: true, username });
+        setTimeout(() => {
+          setState({ ...state, isLoggedIn: false, username: '' });
+          navigate('/login');
+        }, 2 * 60 * 60 * 1000);
       }
     } catch (e) {
       alert(e);

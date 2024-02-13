@@ -23,7 +23,7 @@ const NavBar = () => {
   const { state, setState } = context;
 
   const handleLogout = () => {
-    setState({ ...state, isLoggedIn: false });
+    setState({ ...state, isLoggedIn: false, username: '' });
     navigate('/');
   };
 
