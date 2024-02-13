@@ -149,7 +149,7 @@ const Admin = () => {
 
     if (res.error) return alert(res.error);
 
-    setNewban('');
+    setNewbikeban('');
     setBikeBans(res.bikebans);
   };
 
@@ -208,7 +208,9 @@ const Admin = () => {
   async function fetchInfo() {
     if (!context || !context.state.username) return;
     const res = await fetch(
-      `${API_URL}/admin?staff_name=${encodeURIComponent(context.state.username)}`,
+      `${API_URL}/admin?staff_name=${encodeURIComponent(
+        context.state.username
+      )}`,
       {
         method: 'GET',
         headers: {
