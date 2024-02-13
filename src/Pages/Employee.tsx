@@ -167,31 +167,20 @@ const Employee = () => {
 
   const handleHeadcountChange = (field: keyof Headcount, value: any) => {
     const numValue = Number(value);
-    if (isNaN(numValue) && numValue < 0) return;
+    if (isNaN(numValue) && numValue < 0)
+      setHeadcount({
+        ...headcount,
+        [field]: typeof field === 'boolean' ? false : 0
+      });
     setHeadcount({ ...headcount, [field]: numValue });
   };
 
   const handleSubmitHeadcount = async () => {
-    const {
-      weight_room,
-      gym,
-      lobby,
-      aerobics_room,
-      weight_reserved,
-      gym_reserved,
-      aerobics_reserved
-    } = headcount;
     const res = await fetch(`${API_URL}/headcount`, {
       method: 'POST',
       body: JSON.stringify({
         staff_name: context.state.username,
-        weight_room,
-        gym,
-        lobby,
-        aerobics_room,
-        weight_reserved,
-        gym_reserved,
-        aerobics_reserved
+        ...headcount
       }),
       headers: {
         'Content-Type': 'application/json'

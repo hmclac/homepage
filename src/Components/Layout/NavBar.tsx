@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
 
 import { AppContext } from '../../Contexts/AppContext';
@@ -8,21 +8,24 @@ import { navbarLight } from '../App';
 
 const NavBar = () => {
   const context = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (context) {
       // Any logic that depends on context
     }
-  }, [context]);
+  }, [context, navigate]);
 
   if (!context) {
     return null;
   }
 
-  const {
-    state
-    // setState
-  } = context;
+  const { state, setState } = context;
+
+  const handleLogout = () => {
+    setState({ ...state, isLoggedIn: false });
+    navigate('/');
+  };
 
   return (
     <Navbar expand='md' style={{ backgroundColor: navbarLight }}>
@@ -48,6 +51,7 @@ const NavBar = () => {
               <Nav.Link as={Link} to='/admin'>
                 Admin
               </Nav.Link>
+              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
             </>
           ) : (
             <>
