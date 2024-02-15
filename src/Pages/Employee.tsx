@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap';
 
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,8 @@ const Employee = () => {
   const [headcount, setHeadcount] = useState<Headcount>(defaultHeadcount);
 
   const navigate = useNavigate();
+
+  const swipeInputRef = useRef<HTMLInputElement>(null);
 
   const fetchCheckouts = async (username: string) => {
     const res: CheckoutData = await fetch(`${API_URL}/checkout`, {
@@ -89,9 +91,26 @@ const Employee = () => {
       return navigate('/login');
     document.title = 'LAC | Employee';
 
+    swipeInputRef.current?.focus();
+
     fetchCheckouts(context.state.username);
     fetchBikes(context.state.username);
-  }, [navigate, context]);
+  }, [context, navigate, swipeInputRef]);
+
+  useEffect(() => {
+    const handleBodyClick = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).matches('input, select, textarea, button'))
+        swipeInputRef.current?.focus();
+    };
+
+    swipeInputRef.current?.focus();
+
+    document.body.addEventListener('click', handleBodyClick);
+
+    return () => {
+      document.body.removeEventListener('click', handleBodyClick);
+    };
+  }, []);
 
   if (!context || !context.state.isLoggedIn) {
     return <p>You must be logged in to access this page.</p>;
@@ -431,6 +450,7 @@ const Employee = () => {
                           value={swipeData}
                           onChange={(e) => setSwipeData(e.currentTarget.value)}
                           onKeyDown={handleKeyPress}
+                          ref={swipeInputRef}
                         />
                       </Form.Group>
                       <Button variant='primary' type='submit'>
