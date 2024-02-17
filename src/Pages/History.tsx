@@ -29,19 +29,20 @@ ChartJS.register(
 export const History = () => {
   const [data, setData] = useState<DataType>({ data: [], labels: [] });
   const [startDate, setStartDate] = useState<DateTime>(
-    DateTime.now().minus({ days: 7 }).startOf('day')
+    // DateTime.now().minus({ days: 7 }).startOf('day')
+    DateTime.now().startOf('day')
   );
   const [endDate, setEndDate] = useState<DateTime>(DateTime.now().endOf('day'));
-  const [range, setRange] = useState<boolean>(true);
+  const [range, setRange] = useState<boolean>(false);
 
   const options = {
     plugins: {
       legend: {
-        display: false 
+        display: false
       },
       title: {
         display: true,
-        text: `Swipe Data`, 
+        text: `Swipe Data`,
         padding: {
           top: 10,
           bottom: 30
@@ -65,13 +66,13 @@ export const History = () => {
       y: {
         title: {
           display: true,
-          text: 'Number of Swipes', 
+          text: 'Number of Swipes',
           font: {
             size: 15
           },
           padding: { top: 0, bottom: 10 }
         },
-        beginAtZero: true 
+        beginAtZero: true
       }
     }
   };
