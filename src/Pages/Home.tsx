@@ -13,6 +13,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+// import 'chartjs-adapter-luxon';
+
 import { API_URL } from '..';
 
 ChartJS.register(
@@ -24,14 +26,22 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const options = {
+const options: any = {
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        stepSize: 1
+        // callback: (x: number) => Math.round(x)
+      }
+    }
+  },
   plugins: {
     legend: {
-      display: false // Hide legend
+      display: false
     },
     title: {
-      display: false // Hide title
+      display: false
     }
   }
 };
@@ -49,84 +59,31 @@ export const H2 = styled.h2`
 
 const Home = () => {
   const [occupancy, setOccupancy] = useState<Occupancy>({
-    headcount_last_updated: '',
-    weightRoom: { count: 0, data: [] },
-    gym: { count: 0, data: [] },
-    aerobics: { count: 0, data: [] },
+    headcount_labels: [],
+    weightRoom: { reserved: false, count: 0, data: [] },
+    gym: { reserved: false, count: 0, data: [] },
+    aerobics: { reserved: false, count: 0, data: [] },
     lobby: { count: 0, data: [] },
     checkout: {},
     bikes: {},
     bikeUpdate: '',
     checkoutUpdate: ''
   });
-  const [data, setData] = useState<DataState>(defaultState);
-
-  useEffect(() => {
-    if (!occupancy) return;
-    setData({
-      weight_room: {
-        labels: occupancy?.weightRoom?.data.map((point) => point.time),
-        datasets: [
-          {
-            label: '',
-            data: occupancy?.weightRoom?.data.map((x) => x.count),
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }
-        ]
-      },
-      gym: {
-        labels: occupancy?.gym.data.map((point) => point.time),
-        datasets: [
-          {
-            label: '',
-            data: occupancy?.gym.data.map((x) => x.count),
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }
-        ]
-      },
-      aerobics_room: {
-        labels: occupancy?.aerobics.data.map((point) => point.time),
-        datasets: [
-          {
-            label: '',
-            data: occupancy?.aerobics.data.map((x) => x.count),
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }
-        ]
-      },
-      lobby: {
-        labels: occupancy?.lobby.data.map((point) => point.time),
-        datasets: [
-          {
-            label: '',
-            data: occupancy?.lobby.data.map((x) => x.count),
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }
-        ]
-      }
-    });
-  }, [occupancy]);
 
   useEffect(() => {
     document.title = 'LAC | Home';
     const updateData = async () => {
       try {
-        var res = await fetch(API_URL).then((x) => x.json());
+        const res = await fetch(API_URL).then((x) => x.json());
+        console.log(res);
+        if (res.error) {
+          console.error(res.error);
+          return;
+        }
+        setOccupancy(res);
       } catch (e) {
-        return <p>Server could not be reached</p>;
+        console.error('Server could not be reached');
       }
-      if (res.error) {
-        return <p>{res.error}</p>;
-      }
-      setOccupancy(res as Res);
     };
     updateData();
   }, []);
@@ -138,6 +95,36 @@ const Home = () => {
       </>
     );
   }
+
+  const {
+    headcount_labels,
+    weightRoom,
+    gym,
+    aerobics,
+    lobby,
+    checkout,
+    checkoutUpdate,
+    bikes,
+    bikeUpdate
+  } = occupancy;
+
+  const lastUpdated = headcount_labels[headcount_labels.length - 1];
+
+  const getData = (occ: RoomData): Data => {
+    return {
+      labels: headcount_labels,
+      datasets: [
+        {
+          label: '',
+          data: occ.data,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }
+      ]
+    };
+  };
+
   return (
     <>
       <Container style={{ padding: '30px 1%' }}>
@@ -145,27 +132,22 @@ const Home = () => {
         <Row>
           <Col sm={12} md={6}>
             <CustomContainer>
-              <H2>Weight Room Occupancy - {occupancy?.weightRoom?.count}</H2>
-              <p>
-                Currently reserved:
-                {occupancy?.weightRoom?.reserved ? 'Yes' : 'No'}
-              </p>
-              <Line data={data?.weight_room} options={options} />{' '}
+              <H2>Weight Room Occupancy - {weightRoom.count}</H2>
+              <p>Currently reserved: {weightRoom.reserved ? 'Yes' : 'No'}</p>
+              <Line data={getData(weightRoom)} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy?.headcount_last_updated}</p>
+              <p>Last updated: {lastUpdated}</p>
             </CustomContainer>
           </Col>
 
           <Col sm={12} md={6}>
             {/* Gym Occupancy */}
             <CustomContainer>
-              <H2>Gym Occupancy - {occupancy?.gym.count}</H2>
-              <p>
-                Currently reserved: {occupancy?.gym.reserved ? 'Yes' : 'No'}
-              </p>
-              <Line data={data.gym} options={options} />{' '}
+              <H2>Gym Occupancy - {gym.count}</H2>
+              <p>Currently reserved: {gym.reserved ? 'Yes' : 'No'}</p>
+              <Line data={getData(gym)} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy?.headcount_last_updated}</p>
+              <p>Last updated: {lastUpdated}</p>
             </CustomContainer>
           </Col>
         </Row>
@@ -173,23 +155,20 @@ const Home = () => {
           <Col sm={12} md={6}>
             {/* Aerobics Room Occupancy */}
             <CustomContainer>
-              <H2>Aerobics Room Occupancy - {occupancy?.aerobics.count}</H2>
-              <p>
-                Currently reserved:{' '}
-                {occupancy?.aerobics.reserved ? 'Yes' : 'No'}
-              </p>
-              <Line data={data.aerobics_room} options={options} />{' '}
+              <H2>Aerobics Room Occupancy - {aerobics.count}</H2>
+              <p>Currently reserved: {aerobics.reserved ? 'Yes' : 'No'}</p>
+              <Line data={getData(aerobics)} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy?.headcount_last_updated}</p>
+              <p>Last updated: {lastUpdated}</p>
             </CustomContainer>
           </Col>
           <Col sm={12} md={6}>
             {/* Lobby Room Occupancy */}
             <CustomContainer>
-              <H2>Lobby Occupancy - {occupancy?.lobby.count}</H2>
-              <Line data={data.aerobics_room} options={options} />{' '}
+              <H2>Lobby Occupancy - {lobby.count}</H2>
+              <Line data={getData(lobby)} options={options} />{' '}
               {/* Adapt data for Weight Room */}
-              <p>Last updated: {occupancy?.headcount_last_updated}</p>
+              <p>Last updated: {lastUpdated}</p>
             </CustomContainer>
           </Col>
         </Row>
@@ -206,9 +185,9 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {occupancy?.checkout &&
-                Object.keys(occupancy?.checkout).map((key) => {
-                  const item = occupancy!.checkout[key];
+              {checkout &&
+                Object.keys(checkout).map((key) => {
+                  const item = checkout[key];
                   return (
                     <tr key={key}>
                       <td>{key}</td>
@@ -219,7 +198,7 @@ const Home = () => {
                 })}
             </tbody>
           </Table>
-          <p>Last updated: {occupancy?.checkoutUpdate || 'N/A'}</p>
+          <p>Last updated: {checkoutUpdate || 'N/A'}</p>
         </CustomContainer>
         {/* Equipment Availability Table */}
         <CustomContainer>
@@ -233,9 +212,9 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {occupancy?.bikes &&
-                Object.keys(occupancy?.bikes).map((key: string) => {
-                  const item = occupancy!.bikes[key];
+              {bikes &&
+                Object.keys(bikes).map((key: string) => {
+                  const item = bikes[key];
                   return (
                     <tr key={key}>
                       <td>{key}</td>
@@ -252,7 +231,7 @@ const Home = () => {
                 })}
             </tbody>
           </Table>
-          <p>Last updated: {occupancy?.bikeUpdate || 'N/A'}</p>
+          <p>Last updated: {bikeUpdate || 'N/A'}</p>
         </CustomContainer>
       </Container>
     </>
@@ -260,57 +239,6 @@ const Home = () => {
 };
 
 export { Home };
-
-const defaultState = {
-  weight_room: {
-    labels: [],
-    datasets: [
-      {
-        label: '',
-        data: [],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
-  },
-  gym: {
-    labels: [],
-    datasets: [
-      {
-        label: '',
-        data: [],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
-  },
-  aerobics_room: {
-    labels: [],
-    datasets: [
-      {
-        label: '',
-        data: [],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
-  },
-  lobby: {
-    labels: [],
-    datasets: [
-      {
-        label: '',
-        data: [],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
-  }
-};
 
 type Data = {
   labels: string[];
@@ -323,23 +251,13 @@ type Data = {
   }[];
 };
 
-type DataState = {
-  weight_room: Data;
-  gym: Data;
-  aerobics_room: Data;
-  lobby: Data;
-};
-
-type Occupancy = Res;
-
-type Res = {
-  headcount_last_updated: string;
-  weightRoom: Room;
-  gym: Room;
-  aerobics: Room;
-  lobby: Room;
+type Occupancy = {
+  headcount_labels: string[];
+  weightRoom: RoomData;
+  gym: RoomData;
+  aerobics: RoomData;
+  lobby: RoomData;
   checkout: {
-    // [key: string]: { number: number; checked_out_for: string } | false;
     [key: string]: any;
   };
   bikes: {
@@ -348,6 +266,9 @@ type Res = {
   bikeUpdate: string;
   checkoutUpdate: string;
 };
-type Room = { reserved?: boolean; count: number; data: Occ[] };
 
-type Occ = { time: string; count: number };
+type RoomData = {
+  reserved?: boolean;
+  count: number;
+  data: number[];
+};
