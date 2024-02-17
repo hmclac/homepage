@@ -75,7 +75,6 @@ const Home = () => {
     const updateData = async () => {
       try {
         const res = await fetch(API_URL).then((x) => x.json());
-        console.log(res);
         if (res.error) {
           console.error(res.error);
           return;

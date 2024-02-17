@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { API_URL } from '../';
+import { API_URL } from '..';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,7 +26,7 @@ ChartJS.register(
   Legend
 );
 
-export const History = () => {
+export const Stats = () => {
   const [data, setData] = useState<DataType>({ data: [], labels: [] });
   const [startDate, setStartDate] = useState<DateTime>(
     // DateTime.now().minus({ days: 7 }).startOf('day')
@@ -78,7 +78,7 @@ export const History = () => {
   };
 
   useEffect(() => {
-    document.title = 'LAC | History';
+    document.title = 'LAC | Stats';
     const fetchData = async () => {
       const startTimestamp = startDate.toJSDate().getTime();
       const endTimestamp = endDate.toJSDate().getTime();
@@ -86,7 +86,7 @@ export const History = () => {
       try {
         const endTime = range ? `&date_end=${endTimestamp}` : '';
         const response = await fetch(
-          `${API_URL}/history?date_start=${startTimestamp}&range=${range}${endTime}`
+          `${API_URL}/stats?date_start=${startTimestamp}&range=${range}${endTime}`
         );
         const res = await response.json();
         if (!res.error) {

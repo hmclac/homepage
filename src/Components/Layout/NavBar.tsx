@@ -12,7 +12,6 @@ const NavBar = () => {
 
   useEffect(() => {
     if (context) {
-      // Any logic that depends on context
     }
   }, [context, navigate]);
 
@@ -38,8 +37,8 @@ const NavBar = () => {
           <Nav.Link as={Link} to='/'>
             Home
           </Nav.Link>
-          <Nav.Link as={Link} to='/history'>
-            History
+          <Nav.Link as={Link} to='/stats'>
+            Stats
           </Nav.Link>
         </Nav>
         <Nav className='ml-auto'>

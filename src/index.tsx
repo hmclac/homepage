@@ -11,7 +11,7 @@ import { Login } from './Pages/Login';
 import { NotFound } from './Pages/404';
 import { Employee } from './Pages/Employee';
 import { Admin } from './Pages/Admin';
-import { History } from './Pages/History';
+import { Stats } from './Pages/Stats';
 
 // process.env.URL = 'http://localhost:3000';
 // export const API_URL = 'http://localhost:5000';
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/employee', element: <Employee /> },
       { path: '/admin', element: <Admin /> },
-      { path: '/history', element: <History /> },
+      { path: '/stats', element: <Stats /> },
       { path: '*', element: <NotFound /> }
     ]
   }
