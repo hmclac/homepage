@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
 import { AppProvider } from './Contexts/AppContext';
@@ -14,8 +14,8 @@ import { Admin } from './Pages/Admin';
 import { Stats } from './Pages/Stats';
 
 // process.env.URL = 'http://localhost:3000';
-// export const API_URL = 'http://localhost:5000';
-export const API_URL = 'https://stryfe-backend.mooo.com';
+export const API_URL = 'http://localhost:5000';
+// export const API_URL = 'https://stryfe-backend.mooo.com';
 
 const router = createBrowserRouter([
   {

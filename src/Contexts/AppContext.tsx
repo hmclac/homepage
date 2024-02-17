@@ -1,13 +1,10 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-// import { API_URL } from '..';
 
-// Context with the correct type
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
-  // Define the default state
   const defaultState: AppState = {
     username: undefined,
     isLoggedIn: false,
@@ -99,7 +96,6 @@ export interface AppState {
   isLoggedIn: boolean;
 }
 
-// Define the shape of your context
 interface AppContextType {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;

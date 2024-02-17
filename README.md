@@ -1,1 +1,1 @@
-# HMC Lac Website
+# HMC LAC Website

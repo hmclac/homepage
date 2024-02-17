@@ -1,64 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Table } from 'react-bootstrap';
-import { Line } from 'react-chartjs-2';
-import styled from 'styled-components';
+import { Container, Row, Table } from 'react-bootstrap';
 
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
-// import 'chartjs-adapter-luxon';
+import { OccupancyGraph } from '../Components/Home/OccupancyGraph';
+import { CustomContainer } from '../Components';
 
 import { API_URL } from '..';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-const options: any = {
-  scales: {
-    y: {
-      beginAtZero: true,
-      ticks: {
-        stepSize: 1
-        // callback: (x: number) => Math.round(x)
-      }
-    }
-  },
-  plugins: {
-    legend: {
-      display: false
-    },
-    title: {
-      display: false
-    }
-  }
-};
-
-export const CustomContainer = styled(Container)`
-  background-color: #f8f9fa; // Mimic Jumbotron's light grey background
-  padding: 2rem;
-  margin-bottom: 20px;
-  border-radius: 0.3rem;
-`;
-
-export const H2 = styled.h2`
-  text-align: center;
-`;
-
 const Home = () => {
-  const [occupancy, setOccupancy] = useState<Occupancy>({
+  const [occupancy, setOccupancy] = useState<Occupancy | null>({
     headcount_labels: [],
     weightRoom: { reserved: false, count: 0, data: [] },
     gym: { reserved: false, count: 0, data: [] },
@@ -77,11 +26,14 @@ const Home = () => {
         const res = await fetch(API_URL).then((x) => x.json());
         if (res.error) {
           console.error(res.error);
+          setOccupancy(null);
           return;
         }
         setOccupancy(res);
       } catch (e) {
         console.error('Server could not be reached');
+        setOccupancy(null);
+        return;
       }
     };
     updateData();
@@ -109,67 +61,37 @@ const Home = () => {
 
   const lastUpdated = headcount_labels[headcount_labels.length - 1];
 
-  const getData = (occ: RoomData): Data => {
-    return {
-      labels: headcount_labels,
-      datasets: [
-        {
-          label: '',
-          data: occ.data,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }
-      ]
-    };
-  };
-
   return (
     <>
       <Container style={{ padding: '30px 1%' }}>
         {/* Weight Room Occupancy */}
         <Row>
-          <Col sm={12} md={6}>
-            <CustomContainer>
-              <H2>Weight Room Occupancy - {weightRoom.count}</H2>
-              <p>Currently reserved: {weightRoom.reserved ? 'Yes' : 'No'}</p>
-              <Line data={getData(weightRoom)} options={options} />{' '}
-              {/* Adapt data for Weight Room */}
-              <p>Last updated: {lastUpdated}</p>
-            </CustomContainer>
-          </Col>
-
-          <Col sm={12} md={6}>
-            {/* Gym Occupancy */}
-            <CustomContainer>
-              <H2>Gym Occupancy - {gym.count}</H2>
-              <p>Currently reserved: {gym.reserved ? 'Yes' : 'No'}</p>
-              <Line data={getData(gym)} options={options} />{' '}
-              {/* Adapt data for Weight Room */}
-              <p>Last updated: {lastUpdated}</p>
-            </CustomContainer>
-          </Col>
+          <OccupancyGraph
+            room={weightRoom}
+            room_name='Weight Room'
+            headcount_labels={headcount_labels}
+            last_updated={lastUpdated}
+          />
+          <OccupancyGraph
+            room={gym}
+            room_name='Gym'
+            headcount_labels={headcount_labels}
+            last_updated={lastUpdated}
+          />
         </Row>
         <Row>
-          <Col sm={12} md={6}>
-            {/* Aerobics Room Occupancy */}
-            <CustomContainer>
-              <H2>Aerobics Room Occupancy - {aerobics.count}</H2>
-              <p>Currently reserved: {aerobics.reserved ? 'Yes' : 'No'}</p>
-              <Line data={getData(aerobics)} options={options} />{' '}
-              {/* Adapt data for Weight Room */}
-              <p>Last updated: {lastUpdated}</p>
-            </CustomContainer>
-          </Col>
-          <Col sm={12} md={6}>
-            {/* Lobby Room Occupancy */}
-            <CustomContainer>
-              <H2>Lobby Occupancy - {lobby.count}</H2>
-              <Line data={getData(lobby)} options={options} />{' '}
-              {/* Adapt data for Weight Room */}
-              <p>Last updated: {lastUpdated}</p>
-            </CustomContainer>
-          </Col>
+          <OccupancyGraph
+            room={aerobics}
+            room_name='Aerobics Room'
+            headcount_labels={headcount_labels}
+            last_updated={lastUpdated}
+          />
+          <OccupancyGraph
+            room={lobby}
+            room_name='Lobby'
+            headcount_labels={headcount_labels}
+            last_updated={lastUpdated}
+          />
         </Row>
 
         {/* Equipment Availability Table */}
@@ -184,17 +106,16 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {checkout &&
-                Object.keys(checkout).map((key) => {
-                  const item = checkout[key];
-                  return (
-                    <tr key={key}>
-                      <td>{key}</td>
-                      <td>{item ? item.checked_out_for : 'N/A'}</td>
-                      <td>{item ? 'Unavailable' : 'Available'}</td>
-                    </tr>
-                  );
-                })}
+              {Object.keys(checkout).map((key) => {
+                const item = checkout[key];
+                return (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>{item ? item.checked_out_for : 'N/A'}</td>
+                    <td>{item ? 'Unavailable' : 'Available'}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
           <p>Last updated: {checkoutUpdate || 'N/A'}</p>
@@ -211,23 +132,22 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {bikes &&
-                Object.keys(bikes).map((key: string) => {
-                  const item = bikes[key];
-                  return (
-                    <tr key={key}>
-                      <td>{key}</td>
-                      <td>
-                        {item
-                          ? new Date(
-                              Number(item.checked_out_for)
-                            ).toLocaleDateString()
-                          : 'N/A'}
-                      </td>
-                      <td>{item ? 'Unavailable' : 'Available'}</td>
-                    </tr>
-                  );
-                })}
+              {Object.keys(bikes).map((key: string) => {
+                const item = bikes[key];
+                return (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>
+                      {item
+                        ? new Date(
+                            Number(item.checked_out_for)
+                          ).toLocaleDateString()
+                        : 'N/A'}
+                    </td>
+                    <td>{item ? 'Unavailable' : 'Available'}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
           <p>Last updated: {bikeUpdate || 'N/A'}</p>
@@ -238,17 +158,6 @@ const Home = () => {
 };
 
 export { Home };
-
-type Data = {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    fill: boolean;
-    borderColor: string;
-    tension: number;
-  }[];
-};
 
 type Occupancy = {
   headcount_labels: string[];
@@ -266,7 +175,7 @@ type Occupancy = {
   checkoutUpdate: string;
 };
 
-type RoomData = {
+export type RoomData = {
   reserved?: boolean;
   count: number;
   data: number[];
