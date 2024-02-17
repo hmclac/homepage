@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { API_URL } from '../';
@@ -14,6 +14,7 @@ import {
   Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { DateTime } from 'luxon';
 
 ChartJS.register(
   CategoryScale,
@@ -26,19 +27,21 @@ ChartJS.register(
 );
 
 export const History = () => {
-  // Change the state to use Date objects
   const [data, setData] = useState<DataType>({ data: [], labels: [] });
-  const [start, setStart] = useState<Date>(new Date(Date.now() - 86400000 * 7));
-  const [end, setEnd] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<DateTime>(
+    DateTime.now().minus({ days: 7 }).startOf('day')
+  );
+  const [endDate, setEndDate] = useState<DateTime>(DateTime.now().endOf('day'));
+  const [range, setRange] = useState<boolean>(true);
 
   const options = {
     plugins: {
       legend: {
-        display: false // Hide legend
+        display: false 
       },
       title: {
-        display: true, // Display title
-        text: `Swipe Data`, // Chart title
+        display: true,
+        text: `Swipe Data`, 
         padding: {
           top: 10,
           bottom: 30
@@ -52,7 +55,7 @@ export const History = () => {
       x: {
         title: {
           display: true,
-          text: 'Dates', // X axis label
+          text: 'Dates',
           font: {
             size: 15
           },
@@ -62,13 +65,13 @@ export const History = () => {
       y: {
         title: {
           display: true,
-          text: 'Number of Swipes', // Y axis label
+          text: 'Number of Swipes', 
           font: {
             size: 15
           },
           padding: { top: 0, bottom: 10 }
         },
-        beginAtZero: true // Optional: if you want the Y axis to begin at zero
+        beginAtZero: true 
       }
     }
   };
@@ -76,13 +79,13 @@ export const History = () => {
   useEffect(() => {
     document.title = 'LAC | History';
     const fetchData = async () => {
-      // Use the Date objects to get timestamps or suitable format for your API
-      const startTimestamp = start.getTime();
-      const endTimestamp = end.getTime();
+      const startTimestamp = startDate.toJSDate().getTime();
+      const endTimestamp = endDate.toJSDate().getTime();
 
       try {
+        const endTime = range ? `&date_end=${endTimestamp}` : '';
         const response = await fetch(
-          `${API_URL}/history?date_start=${startTimestamp}&date_end=${endTimestamp}`
+          `${API_URL}/history?date_start=${startTimestamp}&range=${range}${endTime}`
         );
         const res = await response.json();
         if (!res.error) {
@@ -95,34 +98,57 @@ export const History = () => {
       }
     };
     fetchData();
-  }, [start, end]);
-
+  }, [startDate, endDate, range]);
+  const handleDateChange = (newDate: Date | null, isStartDate: boolean) => {
+    if (newDate) {
+      const luxonDate = DateTime.fromJSDate(newDate);
+      if (isStartDate) {
+        setStartDate(luxonDate.startOf('day'));
+      } else {
+        setEndDate(luxonDate.endOf('day'));
+      }
+    }
+  };
   return (
     <Container>
       <Row className='justify-content-center mb-3'>
         <Col md={3}>
-          <ReactDatePicker
-            selected={start}
-            onChange={(date: Date | null) => date && setStart(date)} // Ensure date is not null before updating state
-            selectsStart
-            startDate={start}
-            endDate={end}
-            dateFormat='MMMM d, yyyy'
-            isClearable
-          />
+          <Form.Select
+            aria-label='Select range'
+            value={range ? 'range' : 'day'}
+            onChange={(e) => {
+              setRange(e.target.value === 'range');
+            }}>
+            <option value='range'>Range</option>
+            <option value='day'>Day</option>
+          </Form.Select>
         </Col>
+
         <Col md={3}>
           <ReactDatePicker
-            selected={end}
-            onChange={(date: Date | null) => date && setEnd(date)} // Ensure date is not null before updating state
-            selectsEnd
-            startDate={start}
-            endDate={end}
-            minDate={start}
+            selected={startDate.toJSDate()}
+            onChange={(date: Date) => handleDateChange(date, true)}
+            selectsStart
+            startDate={startDate.toJSDate()}
+            endDate={endDate.toJSDate()}
             dateFormat='MMMM d, yyyy'
             isClearable
           />
         </Col>
+        {range && (
+          <Col md={3}>
+            <ReactDatePicker
+              selected={endDate.toJSDate()}
+              onChange={(date: Date) => handleDateChange(date, false)}
+              selectsEnd
+              startDate={startDate.toJSDate()}
+              endDate={endDate.toJSDate()}
+              minDate={startDate.toJSDate()}
+              dateFormat='MMMM d, yyyy'
+              isClearable
+            />
+          </Col>
+        )}
       </Row>
       <Row className='justify-content-center'>
         <Col md={6}>
@@ -139,7 +165,8 @@ export const History = () => {
               ],
               labels: data.labels
             }}
-            options={options}></Line>
+            options={options}
+          />
         </Col>
       </Row>
     </Container>
@@ -150,5 +177,3 @@ type DataType = {
   data: number[];
   labels: string[];
 };
-
-// Adjust other necessary types and logic as before
