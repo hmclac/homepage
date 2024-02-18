@@ -25,7 +25,7 @@ export const Leaderboard = () => {
   }, []);
 
   return (
-    <Table striped bordered hover>
+    <Table hover>
       <thead>
         <tr>
           <th>#</th>

@@ -1,18 +1,39 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
-import { AppContext } from '../Contexts/AppContext';
 import { NavBar } from './Layout/NavBar';
 
-export const navbarLight = '#F9F9FA';
+export enum Colors {
+  LIGHT = '#EFEFEF',
+  DARK = '#3d4040',
+  GRAY = '#d8d9d9'
+}
 
-// Styles for the App container
+const GlobalStyles = createGlobalStyle`
+  :root {
+    --bs-body-bg: ${Colors.GRAY};
+    // --bs-table-bg: ${Colors.LIGHT}; Light grey background
+    --bs-table-color: ${Colors.GRAY};
+    --bs-table-hover-bg: ${Colors.DARK};
+    --bs-table-hover-color: ${Colors.DARK};
+  }
+
+  .react-datepicker {
+    background-color:${Colors.GRAY});
+    color: ${Colors.GRAY};
+  }
+
+  .react-datepicker__header {
+    background-color:${Colors.GRAY};
+  }
+`;
+
 const StyledApp = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh; // Ensure it takes at least the full viewport height
-  background-color: #fbf9ef;
+  background-color: #3d4040;
 `;
 
 // Styles for the main content area
@@ -21,16 +42,9 @@ const MainContent = styled.div`
 `;
 
 const App = () => {
-  const context = useContext(AppContext);
-
-  if (!context) {
-    return null;
-  }
-
-  // const { state, setState } = context;
-
   return (
     <StyledApp>
+      <GlobalStyles />
       <NavBar />
       <MainContent>
         <Outlet />

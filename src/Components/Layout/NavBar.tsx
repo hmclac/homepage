@@ -4,7 +4,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 
 import { AppContext } from '../../Contexts/AppContext';
 
-import { navbarLight } from '../App';
+import { Colors } from '../App';
 
 const NavBar = () => {
   const context = useContext(AppContext);
@@ -27,7 +27,7 @@ const NavBar = () => {
   };
 
   return (
-    <Navbar expand='md' style={{ backgroundColor: navbarLight }}>
+    <Navbar expand='md' style={{ backgroundColor: Colors.LIGHT }}>
       <Navbar.Brand href='/'>
         <img src={''} alt='LAC' />
       </Navbar.Brand>

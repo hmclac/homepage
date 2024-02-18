@@ -1,9 +1,10 @@
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import { CC } from '../Components';
 
 export const NotFound = () => {
   return (
-    <Container>
+    <CC>
       <Row className='justify-content-center'>
         <Col md={6}>
           <Card className='text-center mt-5'>
@@ -16,6 +17,6 @@ export const NotFound = () => {
           </Card>
         </Col>
       </Row>
-    </Container>
+    </CC>
   );
 };

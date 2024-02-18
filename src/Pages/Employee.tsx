@@ -8,7 +8,8 @@ import { Swipe } from '../Components/Employee/Swipe';
 import { Equipment } from '../Components/Employee/Equipment';
 import { Bike } from '../Components/Employee/Bike';
 import { Headcount } from '../Components/Employee/Headcount';
-import { CustomContainer } from '../Components';
+
+import { CC, CustomContainer } from '../Components';
 
 const Employee = () => {
   const context = useContext(AppContext);
@@ -45,12 +46,21 @@ const Employee = () => {
   }
 
   return (
-    <CustomContainer>
-      <Swipe swipeInputRef={swipeInputRef} />
-      <Equipment />
-      <Bike />
-      <Headcount />
-    </CustomContainer>
+    <CC>
+      <CustomContainer>
+        <Swipe swipeInputRef={swipeInputRef} />
+      </CustomContainer>
+      <CustomContainer>
+        <Equipment />
+      </CustomContainer>
+      <CustomContainer>
+        <Bike />
+      </CustomContainer>
+
+      <CustomContainer>
+        <Headcount />
+      </CustomContainer>
+    </CC>
   );
 };
 

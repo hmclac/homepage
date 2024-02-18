@@ -14,9 +14,13 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
+import { styled } from 'styled-components';
+
 import { DateTime } from 'luxon';
 
 import 'react-datepicker/dist/react-datepicker.css';
+
+import { Colors } from '../App';
 
 import { API_URL } from '../..';
 
@@ -121,6 +125,7 @@ export const Swipe = () => {
           <Form.Select
             aria-label='Select range'
             value={range ? 'range' : 'day'}
+            style={{ backgroundColor: Colors.LIGHT, color: Colors.DARK }}
             onChange={(e) => {
               setRange(e.target.value === 'range');
             }}>

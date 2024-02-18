@@ -1,8 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { Form, Button } from 'react-bootstrap';
+
 import styled from 'styled-components';
+
 import { AppContext } from '../Contexts/AppContext';
+
+import { CC, CustomContainer } from '../Components';
+
 import { API_URL } from '..';
 
 const StyledForm = styled(Form)`
@@ -71,18 +77,20 @@ export const Login = () => {
   };
 
   return (
-    <StyledForm onSubmit={handleLogin}>
-      <Form.Group controlId='formUsername'>
-        <Form.Label>Staff Username</Form.Label>
-        <Form.Control
-          type='text'
-          placeholder='Enter username'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </Form.Group>
+    <CC>
+      <CustomContainer>
+        <StyledForm onSubmit={handleLogin}>
+          <Form.Group controlId='formUsername'>
+            <Form.Label>Staff Username</Form.Label>
+            <Form.Control
+              type='text'
+              placeholder='Enter username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Form.Group>
 
-      {/* <Form.Group controlId='formPassword'>
+          {/* <Form.Group controlId='formPassword'>
         <Form.Label>Password</Form.Label>
         <Form.Control
           type='password'
@@ -92,9 +100,11 @@ export const Login = () => {
         />
       </Form.Group> */}
 
-      <Button variant='primary' type='submit'>
-        Login
-      </Button>
-    </StyledForm>
+          <Button variant='primary' type='submit'>
+            Login
+          </Button>
+        </StyledForm>
+      </CustomContainer>
+    </CC>
   );
 };

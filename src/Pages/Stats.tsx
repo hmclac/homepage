@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Swipe } from '../Components/Stats/Swipe';
 import { Leaderboard } from '../Components/Stats/Leaderboard';
-import { CC } from '../Components';
+import { CustomContainer, CC } from '../Components';
 
 export const Stats = () => {
   useEffect(() => {
@@ -10,13 +10,13 @@ export const Stats = () => {
   }, []);
 
   return (
-    <>
-      <CC>
+    <CC>
+      <CustomContainer>
         <Swipe />
-      </CC>
-      <CC>
+      </CustomContainer>
+      <CustomContainer>
         <Leaderboard />
-      </CC>
-    </>
+      </CustomContainer>
+    </CC>
   );
 };

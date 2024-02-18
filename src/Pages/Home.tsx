@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Table } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 
 import { OccupancyGraph } from '../Components/Home/OccupancyGraph';
-import { CustomContainer } from '../Components';
+import { Table, TableContainer } from '../Components/Home/Table';
+import { CC, CustomContainer } from '../Components';
 
 import { API_URL } from '..';
 
@@ -62,42 +63,40 @@ const Home = () => {
   const lastUpdated = headcount_labels[headcount_labels.length - 1];
 
   return (
-    <>
-      <Container style={{ padding: '30px 1%' }}>
-        {/* Weight Room Occupancy */}
-        <Row>
-          <OccupancyGraph
-            room={weightRoom}
-            room_name='Weight Room'
-            headcount_labels={headcount_labels}
-            last_updated={lastUpdated}
-          />
-          <OccupancyGraph
-            room={gym}
-            room_name='Gym'
-            headcount_labels={headcount_labels}
-            last_updated={lastUpdated}
-          />
-        </Row>
-        <Row>
-          <OccupancyGraph
-            room={aerobics}
-            room_name='Aerobics Room'
-            headcount_labels={headcount_labels}
-            last_updated={lastUpdated}
-          />
-          <OccupancyGraph
-            room={lobby}
-            room_name='Lobby'
-            headcount_labels={headcount_labels}
-            last_updated={lastUpdated}
-          />
-        </Row>
+    <CC>
+      <Row>
+        <OccupancyGraph
+          room={weightRoom}
+          room_name='Weight Room'
+          headcount_labels={headcount_labels}
+          last_updated={lastUpdated}
+        />
+        <OccupancyGraph
+          room={gym}
+          room_name='Gym'
+          headcount_labels={headcount_labels}
+          last_updated={lastUpdated}
+        />
+      </Row>
+      <Row>
+        <OccupancyGraph
+          room={aerobics}
+          room_name='Aerobics Room'
+          headcount_labels={headcount_labels}
+          last_updated={lastUpdated}
+        />
+        <OccupancyGraph
+          room={lobby}
+          room_name='Lobby'
+          headcount_labels={headcount_labels}
+          last_updated={lastUpdated}
+        />
+      </Row>
 
-        {/* Equipment Availability Table */}
-        <CustomContainer>
+      <CustomContainer>
+        <TableContainer>
           <h2>Equipment Availability</h2>
-          <Table striped bordered hover>
+          <Table hover responsive='sm'>
             <thead>
               <tr>
                 <th>Name</th>
@@ -119,41 +118,41 @@ const Home = () => {
             </tbody>
           </Table>
           <p>Last updated: {checkoutUpdate || 'N/A'}</p>
-        </CustomContainer>
-        {/* Equipment Availability Table */}
-        <CustomContainer>
-          <h2>Mudderbike Availability</h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Bike Number</th>
-                <th>Checked Out Since</th>
-                <th>Availability</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(bikes).map((key: string) => {
-                const item = bikes[key];
-                return (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>
-                      {item
-                        ? new Date(
-                            Number(item.checked_out_for)
-                          ).toLocaleDateString()
-                        : 'N/A'}
-                    </td>
-                    <td>{item ? 'Unavailable' : 'Available'}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-          <p>Last updated: {bikeUpdate || 'N/A'}</p>
-        </CustomContainer>
-      </Container>
-    </>
+        </TableContainer>
+      </CustomContainer>
+      {/* Equipment Availability Table */}
+      <CustomContainer>
+        <h2>Mudderbike Availability</h2>
+        <Table hover responsive='sm'>
+          <thead>
+            <tr>
+              <th>Bike Number</th>
+              <th>Checked Out Since</th>
+              <th>Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(bikes).map((key: string) => {
+              const item = bikes[key];
+              return (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>
+                    {item
+                      ? new Date(
+                          Number(item.checked_out_for)
+                        ).toLocaleDateString()
+                      : 'N/A'}
+                  </td>
+                  <td>{item ? 'Unavailable' : 'Available'}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+        <p>Last updated: {bikeUpdate || 'N/A'}</p>
+      </CustomContainer>
+    </CC>
   );
 };
 

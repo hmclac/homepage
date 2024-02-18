@@ -10,7 +10,7 @@ import { Bans } from '../Components/Admin/Bans';
 import { BikeBans } from '../Components/Admin/BikeBans';
 import { Staff } from '../Components/Admin/Staff';
 
-import { CustomContainer, H1 } from '../Components';
+import { CC, CustomContainer, H1 } from '../Components';
 
 import { API_URL } from '..';
 
@@ -59,14 +59,24 @@ const Admin = () => {
     setBikeBans(res.bikebans);
   }
   return (
-    <CustomContainer>
+    <CC>
       <H1>SUPS ONLY</H1>
-      <Equipment equipment={equipment} setEquipment={setEquipment} />
-      <Bike bikes={bikes} setBikes={setBikes} />
-      <Bans bans={bans} setBans={setBans} />
-      <BikeBans bikeBans={bikeBans} setBikeBans={setBikeBans} />
-      <Staff staff={staff} setStaff={setStaff} />
-    </CustomContainer>
+      <CustomContainer>
+        <Equipment equipment={equipment} setEquipment={setEquipment} />
+      </CustomContainer>
+      <CustomContainer>
+        <Bike bikes={bikes} setBikes={setBikes} />
+      </CustomContainer>
+      <CustomContainer>
+        <Bans bans={bans} setBans={setBans} />
+      </CustomContainer>
+      <CustomContainer>
+        <BikeBans bikeBans={bikeBans} setBikeBans={setBikeBans} />
+      </CustomContainer>
+      <CustomContainer>
+        <Staff staff={staff} setStaff={setStaff} />
+      </CustomContainer>
+    </CC>
   );
 };
 
