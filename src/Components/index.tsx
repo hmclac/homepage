@@ -24,3 +24,7 @@ export const H2 = styled.h2`
 export const CC = styled(Container)`
   padding: 30px 1%;
 `;
+
+export const InputField = styled(Container)`
+  padding: 2%;
+`;

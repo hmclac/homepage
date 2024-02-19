@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { AppContext } from '../Contexts/AppContext';
 
-import { CC, CustomContainer } from '../Components';
+import { CC, CustomContainer, InputField } from '../Components';
 
 import { API_URL } from '..';
 
@@ -21,7 +21,7 @@ const StyledForm = styled(Form)`
 `;
 export const Login = () => {
   const [username, setUsername] = useState('');
-  // const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('');
 
   const context = useContext(AppContext);
   const navigate = useNavigate();
@@ -80,29 +80,33 @@ export const Login = () => {
     <CC>
       <CustomContainer>
         <StyledForm onSubmit={handleLogin}>
-          <Form.Group controlId='formUsername'>
-            <Form.Label>Staff Username</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter username'
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Form.Group>
-
-          {/* <Form.Group controlId='formPassword'>
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type='password'
-          placeholder='Password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </Form.Group> */}
-
-          <Button variant='primary' type='submit'>
-            Login
-          </Button>
+          <InputField>
+            <Form.Group controlId='formUsername'>
+              <Form.Label>Staff Username</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter username'
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Form.Group>
+          </InputField>
+          <InputField>
+            <Form.Group controlId='formPassword'>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type='password'
+                placeholder='Ignore for now'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+          </InputField>
+          <InputField>
+            <Button variant='primary' type='submit'>
+              Login
+            </Button>
+          </InputField>
         </StyledForm>
       </CustomContainer>
     </CC>
