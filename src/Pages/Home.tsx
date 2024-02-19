@@ -40,6 +40,7 @@ const Home = () => {
     updateData();
     setInterval(() => {
       updateData();
+      console.log('Refreshed!');
     }, 60000);
   }, []);
 
