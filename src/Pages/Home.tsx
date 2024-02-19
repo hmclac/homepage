@@ -38,6 +38,9 @@ const Home = () => {
       }
     };
     updateData();
+    setInterval(() => {
+      updateData();
+    }, 60000);
   }, []);
 
   if (!occupancy) {

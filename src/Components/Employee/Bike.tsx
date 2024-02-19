@@ -164,6 +164,9 @@ export const Bike = () => {
 
   useEffect(() => {
     fetchBikes(context.state.username!);
+    setInterval(() => {
+      fetchBikes(context.state.username!);
+    }, 60000);
   }, []);
 
   return (

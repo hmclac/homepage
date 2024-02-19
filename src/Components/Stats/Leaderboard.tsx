@@ -22,6 +22,9 @@ export const Leaderboard = () => {
       }
     };
     fetchData();
+    setInterval(() => {
+      fetchData();
+    }, 60000);
   }, []);
 
   return (

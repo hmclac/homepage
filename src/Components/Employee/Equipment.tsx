@@ -47,6 +47,9 @@ export const Equipment = () => {
 
   useEffect(() => {
     fetchCheckouts(context.state.username!);
+    setInterval(() => {
+      fetchCheckouts(context.state.username!);
+    }, 60000);
   }, []);
 
   const handleCheckoutChange = (
