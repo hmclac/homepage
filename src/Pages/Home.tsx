@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Row } from 'react-bootstrap';
+
+import { AppContext } from '../Contexts/AppContext';
 
 import { OccupancyGraph } from '../Components/Home/OccupancyGraph';
 import { Table, TableContainer } from '../Components/Home/Table';
@@ -8,6 +10,8 @@ import { CC, CustomContainer } from '../Components';
 import { API_URL } from '..';
 
 const Home = () => {
+  const context = useContext(AppContext)!;
+
   const [occupancy, setOccupancy] = useState<Occupancy | null>({
     headcount_labels: [],
     weightRoom: { reserved: false, count: 0, data: [] },
@@ -68,6 +72,24 @@ const Home = () => {
 
   return (
     <CC>
+      <Row>
+        <CustomContainer
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <p style={{ margin: 0, marginRight: '4px' }}>THE LAC IS CURRENTLY:</p>
+          <p
+            style={{
+              margin: 0,
+              color: context.state.isOpen ? 'green' : 'red'
+            }}>
+            {context.state.isOpen ? 'OPEN' : 'CLOSED'}
+          </p>
+        </CustomContainer>
+      </Row>
+
       <Row>
         <OccupancyGraph
           room={weightRoom}

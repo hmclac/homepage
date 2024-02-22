@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexts/AppContext';
 
 import { Swipe } from '../Components/Employee/Swipe';
+import { OpenClosed } from '../Components/Employee/OpenClosed';
 import { Equipment } from '../Components/Employee/Equipment';
 import { Bike } from '../Components/Employee/Bike';
 import { Headcount } from '../Components/Employee/Headcount';
@@ -49,6 +50,7 @@ const Employee = () => {
     <CC>
       <CustomContainer>
         <Swipe swipeInputRef={swipeInputRef} />
+        <OpenClosed />
       </CustomContainer>
       <CustomContainer>
         <Equipment />

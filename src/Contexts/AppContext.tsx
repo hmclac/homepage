@@ -53,7 +53,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         volleyballs: { taken: 0, available: 0 },
         lastUpdated: 0
       }
-    }
+    },
+    isOpen: false
   };
 
   const [state, setState] = useState<AppState>(() => {
@@ -94,6 +95,7 @@ export interface AppState {
   username?: string;
   occupancy?: Occupancy;
   isLoggedIn: boolean;
+  isOpen: boolean;
 }
 
 interface AppContextType {
