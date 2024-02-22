@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useCallback
+} from 'react';
 
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 
@@ -10,6 +16,7 @@ import { API_URL } from '../..';
 export const Bike = () => {
   const context = useContext(AppContext)!;
   const [bikes, setBikes] = useState<BikeData>({});
+  const [bikeNotes, setBikeNotes] = useState<BikeNotes[]>([]);
 
   const fetchBikes = async (username: string) => {
     const res = await fetch(`${API_URL}/bikes`, {
@@ -28,6 +35,69 @@ export const Bike = () => {
     }
 
     setBikes(res);
+  };
+
+  const fetchBikeNotes = async (username: string) => {
+    const res = await fetch(`${API_URL}/bikenotes?staff_name=${username}`).then(
+      (x) => x.json()
+    );
+
+    if (res.error) {
+      return console.log(res.error);
+    }
+
+    setBikeNotes(res);
+  };
+
+  const debounceTimeoutRef = useRef<Record<number, NodeJS.Timeout>>({});
+
+  const debounceBikeNotesUpdate = (bike_number: number, notes: string) => {
+    if (debounceTimeoutRef.current[bike_number]) {
+      clearTimeout(debounceTimeoutRef.current[bike_number]);
+    }
+
+    debounceTimeoutRef.current[bike_number] = setTimeout(() => {
+      handleUpdateBikenotes(bike_number.toString(), notes);
+    }, 5000);
+  };
+
+  const handleBikeNotesChange = useCallback(
+    (bike_number: number, notes: string) => {
+      setBikeNotes((currentNotes) =>
+        currentNotes.map((note) =>
+          note.bike_number === bike_number ? { ...note, notes } : note
+        )
+      );
+
+      debounceBikeNotesUpdate(bike_number, notes);
+    },
+    [setBikeNotes, debounceBikeNotesUpdate, debounceTimeoutRef]
+  );
+
+  const handleUpdateBikenotes = async (bike_number: string, notes: string) => {
+    const toSet = bikeNotes.find((x) => x.bike_number === Number(bike_number));
+    if (!toSet) return console.error('invalid bike');
+
+    const res = await fetch(`${API_URL}/bikenotes`, {
+      method: 'POST',
+      body: JSON.stringify({
+        staff_name: context.state.username!,
+        bike_number,
+        notes
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((x) => x.json());
+
+    if (res.error) {
+      return alert(res.error);
+    }
+
+    setBikeNotes([
+      ...bikeNotes.filter((x) => x.bike_number !== Number(bike_number)),
+      res
+    ]);
   };
 
   const handleBikeChange = (key: number, field: keyof Bike, value: any) => {
@@ -164,10 +234,33 @@ export const Bike = () => {
 
   useEffect(() => {
     fetchBikes(context.state.username!);
+    fetchBikeNotes(context.state.username!);
     setInterval(() => {
       fetchBikes(context.state.username!);
+      fetchBikeNotes(context.state.username!);
     }, 60000);
   }, []);
+
+  const BikeNotesInput = ({ bike_number }: { bike_number: number }) => {
+    const [localNote, setLocalNote] = useState('');
+    // Fetch the initial note from the global state
+    useEffect(() => {
+      const existingNote =
+        bikeNotes.find((note) => note.bike_number === bike_number)?.notes || '';
+      setLocalNote(existingNote);
+    }, [bikeNotes, bike_number]);
+
+    // Handle local changes and debounce the update to the global state
+    const handleChange = (e: any) => {
+      const newNote = e.target.value;
+      setLocalNote(newNote);
+      handleBikeNotesChange(bike_number, newNote);
+    };
+
+    return (
+      <Form.Control type='text' value={localNote} onChange={handleChange} />
+    );
+  };
 
   return (
     <>
@@ -187,7 +280,8 @@ export const Bike = () => {
                 <th>Date Due</th>
                 <th>Rented By</th>
                 <th>Renews</th>
-                <th>Actions</th> {/* For modifications */}
+                <th>Actions</th>
+                <th>Bike Notes</th>
               </tr>
             </thead>
             <tbody>
@@ -265,6 +359,9 @@ export const Bike = () => {
                           Check Out
                         </Button>
                       </td>
+                      <td>
+                        <BikeNotesInput bike_number={Number(key)} />
+                      </td>
                     </tr>
                   ) : (
                     <tr key={key}>
@@ -292,6 +389,9 @@ export const Bike = () => {
                           </Button>
                         </div>
                       </td>
+                      <td>
+                        <BikeNotesInput bike_number={Number(key)} />
+                      </td>
                     </tr>
                   )
                 )}
@@ -315,4 +415,10 @@ type Bike = {
 };
 type BikeData = {
   [key: number]: Bike;
+};
+
+type BikeNotes = {
+  bike_number: number;
+  notes: string;
+  staff_name: string;
 };

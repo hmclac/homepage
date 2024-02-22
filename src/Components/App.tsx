@@ -34,11 +34,14 @@ const StyledApp = styled.div`
   flex-direction: column;
   min-height: 100vh; // Ensure it takes at least the full viewport height
   background-color: #3d4040;
+  // background-color: #00000;
+  width: 100%;
 `;
 
 // Styles for the main content area
 const MainContent = styled.div`
   flex-grow: 1; // Allows this element to grow and take up available space
+  // background-color: #00000;
 `;
 
 const App = () => {

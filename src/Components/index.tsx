@@ -15,6 +15,11 @@ export const CustomContainer = styled(Container)`
   padding: 2rem;
   margin-bottom: 20px;
   border-radius: 0.3rem;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100% !important;
 `;
 
 export const H2 = styled.h2`
@@ -27,4 +32,9 @@ export const CC = styled(Container)`
 
 export const InputField = styled(Container)`
   padding: 2%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100% !important;
 `;
