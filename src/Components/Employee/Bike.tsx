@@ -75,9 +75,6 @@ export const Bike = () => {
   );
 
   const handleUpdateBikenotes = async (bike_number: string, notes: string) => {
-    const toSet = bikeNotes.find((x) => x.bike_number === Number(bike_number));
-    if (!toSet) return console.error('invalid bike');
-
     const res = await fetch(`${API_URL}/bikenotes`, {
       method: 'POST',
       body: JSON.stringify({
